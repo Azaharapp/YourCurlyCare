@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  basededatos:
+    image: mariadb:latest
+    container_name: mariadb-ycc
+    environment:
+      - MARIADB_ROOT_PASSWORD=root
+      - MARIADB_DATABASE=yourCurlyCare_db
+      - MARIADB_USER=user1
+      - MARIADB_PASSWORD=123456
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql               #Guarda los datos en el PC para que no se borren cuando se apague Doker
+
+  phpmyadmin:                                #configuracion para que permita acceder a phpMyAdmin de XAMPP
+    image: phpmyadmin:latest
+    container_name: phpmyadmin-daw
+    ports:
+      - "8080:80"
+    environment:
+      - PMA_HOST=basededatos
+      - PMA_USER=root
+      - PMA_PASSWORD=root
+    depends_on:
+      - basededatos
+
+volumes:
+  db_data:                                #Declaracion del volumen donde se van a guardar los datos
