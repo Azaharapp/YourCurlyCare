@@ -3,6 +3,11 @@ using Microsoft.EntityFrameworkCore;
 using YourCurlyCareApi.Models;
 using YourCurlyCareApi.Data;
 
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+
 namespace YourCurlyCareApi.Controllers;
 
 [ApiController]
@@ -10,10 +15,12 @@ namespace YourCurlyCareApi.Controllers;
 public class UsuariosController : ControllerBase            //clase heredada de ControllerBase
 {
     private readonly YourCurlyCareContext _context;         //atributo privado de solo lectura de tipo YourCurlyCareContext
+    private readonly IConfiguration _config;
 
-    public UsuariosController(YourCurlyCareContext context) // constructor
+    public UsuariosController(YourCurlyCareContext context, IConfiguration config) // constructor
     {
         _context = context;
+        _config = config;
     }
 
 
@@ -57,7 +64,7 @@ public class UsuariosController : ControllerBase            //clase heredada de 
         if (emailExiste) return BadRequest("Este email ya está registrado.");
 
         //encriptar contraseña de usuario
-        usuario.Password = BCrypt.Net.BCrypt.HashPassword(usuario.Password);               
+        usuario.Password = BCrypt.Net.BCrypt.HashPassword(usuario.Password);
 
         /*await _context.Database.ExecuteSqlRawAsync(
             "INSERT INTO usuarios (nombre, apellido, username, email, password, fecha_registro) VALUES ({0}, {1}, {2}, {3}, {4}, {5})", 
@@ -69,4 +76,48 @@ public class UsuariosController : ControllerBase            //clase heredada de 
         return CreatedAtAction(nameof(GetUsuario), new { id = usuario.Id }, usuario);
     }
 
+
+    // inicio de sesion
+    [HttpPost("login")]
+    public async Task<ActionResult> Login(LoginRequest request)
+    {
+        /*buscar al usuario por su email
+        SELECT * FROM usuarios WHERE email = {0} LIMIT 1; */
+        var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == request.Email);
+        if (usuario == null) return BadRequest("Credenciales incorrectas. Parece que el email no es correcto.");
+
+        bool passwordValida = BCrypt.Net.BCrypt.Verify(request.Password, usuario.Password);
+        if (!passwordValida) return BadRequest("Credenciales incorrectas. Parece que la contraseña no es correcta");
+
+        string tokenFinal = GenerarTokenJwt(usuario);
+        return Ok(new
+        {
+            mensaje = "¡Login exitoso!",
+            token = tokenFinal
+        });
+    }
+
+    private string GenerarTokenJwt(Usuario usuario)
+    {
+        SymmetricSecurityKey claveSegura = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+        SigningCredentials credenciales = new SigningCredentials(claveSegura, SecurityAlgorithms.HmacSha256);
+
+        //datos que iran dentro del token
+        Claim[] datosUsuario = new Claim[]
+        {
+            new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()),
+            new Claim(ClaimTypes.Email, usuario.Email),
+            new Claim(ClaimTypes.Name, usuario.Nombre)
+        };
+
+        //estructura del token
+        JwtSecurityToken tokenJwt = new JwtSecurityToken(
+            issuer: _config["Jwt:Issuer"],
+            audience: _config["Jwt:Audience"],
+            claims: datosUsuario,
+            expires: DateTime.Now.AddHours(3),
+            signingCredentials: credenciales);
+
+        return new JwtSecurityTokenHandler().WriteToken(tokenJwt);
+    }
 }
