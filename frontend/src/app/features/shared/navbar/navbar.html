@@ -1,0 +1,54 @@
+<nav class="navbar">
+  <div class="logo">
+    <img src="/img/logo.png" alt="logo" width="100px" height="100px" />
+    <h2>YourCurlyCare</h2>
+  </div>
+
+  <ul class="nav">
+    <li class="barra">|</li>
+    <li><a routerLink="/">Inicio</a></li>
+    <li class="barra">|</li>
+    <li><a routerLink="/">Cuidados</a></li>
+    <li class="barra">|</li>
+    <li><a routerLink="/">Escáner</a></li>
+    <li class="barra">|</li>
+    <li><a routerLink="/">Test</a></li>
+    <li class="barra">|</li>
+    <li><a routerLink="/">Tienda</a></li>
+    <li class="barra">|</li>
+  </ul>
+
+  <!--Los iconos son de la web de Icons8: -->
+  <div class="icons">
+    <div class="containerSearch">
+      <input type="text" placeholder="Buscar" />
+      <img src="https://img.icons8.com/ios/50/search--v1.png" alt="search" />
+    </div>
+    <div class="containerPerfil">
+      <span class="icon" (click)="desplegarPerfil()">
+        <img
+          width="24"
+          height="24"
+          src="https://img.icons8.com/material-rounded/24/user.png"
+          alt="user"
+        />
+      </span>
+
+      @if (mostrarOpcionesPerfil) {
+      <div class="opcionesPerfil">
+        <a routerLink="/login" (click)="desplegarPerfil()">Iniciar sesión</a>
+        <a routerLink="/registro" (click)="desplegarPerfil()">Registrarse</a>
+      </div>
+      }
+    </div>
+
+    <span class="icon">
+      <img
+        width="48"
+        height="48"
+        src="https://img.icons8.com/deco-glyph/48/shopping-cart.png"
+        alt="shopping-cart"
+      />
+    </span>
+  </div>
+</nav>
