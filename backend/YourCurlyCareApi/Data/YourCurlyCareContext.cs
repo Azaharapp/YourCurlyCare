@@ -13,13 +13,6 @@ public class YourCurlyCareContext : DbContext               //clase hereda de Db
 
     //todas las tablas de BD
     public DbSet<Usuario> Usuarios { get; set; }
-    public DbSet<Direccion> Direccions { get; set; }
-    public DbSet<ProductoVenta> ProductoVentas { get; set; }
-    public DbSet<Pedido> Pedidos { get; set; }
-    public DbSet<ProductoVPedido> ProductoVPedidos { get; set; }
-    public DbSet<Carrito> Carritos { get; set; }
-    public DbSet<ProductoVCarrito> ProductoVCarritos { get; set; }
-    public DbSet<Pago> Pagos { get; set; }
     public DbSet<Cuestionario> Cuestionarios { get; set; }
     public DbSet<Respuesta> Respuestas { get; set; }
     public DbSet<Pregunta> Preguntas { get; set; }

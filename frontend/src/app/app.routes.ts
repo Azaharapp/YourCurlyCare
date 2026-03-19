@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
-import { Login } from './features/components/auth/login/login';
-import { Registro } from './features/components/auth/registro/registro';
+import { Login } from './features/web/components/auth/login/login';
+import { Registro } from './features/web/components/auth/registro/registro';
 
 
 

@@ -1,55 +1,38 @@
 @import url('https://fonts.googleapis.com/css2?family=Akaya+Kanadaka&family=Alegreya:ital,wght@0,400..900;1,400..900&display=swap');
 
-.navbar {
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+.header {
   display: flex;
-  justify-content: space-between;
+  flex-wrap: wrap; 
+  justify-content: space-between; 
   align-items: center;
   padding: 15px 35px;
   background-color: #fefefe;
   font-family: 'Alegreya';
 }
 
-h2 {
-  font-family: 'Akaya Kanadaka';
-  font-size: 20px;
-  color: black;
-}
-
 .logo {
+  order: 1;
   display: flex;
   align-items: center;
   gap: 15px;
-}
-
-.nav {
-  display: flex;
-  list-style: none;
-  gap: 60px;
-  margin: 0;
-  padding: 0;
-}
-
-.nav a {
-  text-decoration: none;
-  color: black;
-  transition: color 0.3s;
-}
-
-.barra {
-  color: #ac7f5e;
-}
-
-nav ul li{
-    margin-top: 80px;
 } 
-.nav a:hover {
-  color: #d0b49f;
-}
 
 .icons {
+  order: 2;
   display: flex;
   align-items: center;
   gap: 20px;
+}
+
+nav {
+ order: 3;
+ width: 100%;
 }
 
 .icons img {
@@ -62,6 +45,29 @@ nav ul li{
 
 .icons img:hover {
   transform: scale(1.1);
+}
+
+.nav {
+  display: flex;
+  justify-content: center; 
+  list-style: none;
+  gap: 30px;
+  margin: 0; 
+  padding: 0;
+}
+
+.nav a {
+  text-decoration: none;
+  color: black;
+  transition: color 0.3s;
+}
+
+.nav a:hover {
+  color: #d0b49f;
+}
+
+.barra {
+  color: #ac7f5e;
 }
 
 .containerSearch {
@@ -79,17 +85,18 @@ nav ul li{
   outline: none;
   font-size: 14px;
   font-family: 'Alegreya';
-  width: 180px;
+  width: 150px;
 }
 
 .containerPerfil {
   position: relative;
+  cursor: pointer;
 }
 
 .opcionesPerfil {
   position: absolute;
   top: 40px;
-  right: -20px;
+  right: 0;
   background-color: #d0b49f;
   border-radius: 8px;
   border: 1px solid #ac7f5e;
@@ -98,11 +105,12 @@ nav ul li{
   flex-direction: column;
   min-width: 150px;
   overflow: hidden;
-  z-index: 1000;
+  z-index: 10;
 }
 
-.opcionesPerfil a {
+.opcionesPerfil a, .opcionesPerfil p {
   padding: 12px 20px;
+  margin: 0;
   text-decoration: none;
   color: black;
   font-size: 14px;
@@ -111,4 +119,48 @@ nav ul li{
 
 .opcionesPerfil a:hover {
   color: white;
+}
+
+h2 {
+  font-family: 'Akaya Kanadaka';
+  font-size: 20px;
+  color: black;
+}
+
+
+/*----Responsive----*/
+
+@media (max-width: 800px) {
+  .header {
+    padding: 10px;
+  }
+
+  .nav {
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .containerSearch input {
+    width: 100px;
+  }
+}
+
+@media (max-width: 400px) {
+  .header {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .containerSearch {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .containerSearch input {
+    width: 100%;
+  }
+  
+  .opcionesPerfil {
+    right: -20px; 
+  }
 }

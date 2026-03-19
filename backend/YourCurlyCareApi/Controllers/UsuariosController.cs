@@ -60,7 +60,7 @@ public class UsuariosController : ControllerBase            //clase heredada de 
         //variable almacena boolean si el email existe o no 
         var emailExiste = await _context.Usuarios.AnyAsync(u => u.Email == usuario.Email);
 
-        //si el email ya existe, lanza error --> no es mejor hacer un throw new error, es lo que yo vi en clase o eso es solo por consola?
+        //si el email ya existe, lanza error
         if (emailExiste) return BadRequest("Este email ya está registrado.");
 
         //encriptar contraseña de usuario
@@ -70,6 +70,7 @@ public class UsuariosController : ControllerBase            //clase heredada de 
             "INSERT INTO usuarios (nombre, apellido, username, email, password, fecha_registro) VALUES ({0}, {1}, {2}, {3}, {4}, {5})", 
             usuario.Nombre, usuario.Apellido, usuario.Username, usuario.Email, usuario.Password, usuario.FechaRegistro
         ); */
+        usuario.FechaRegistro = DateTime.Now;
         _context.Usuarios.Add(usuario);
         await _context.SaveChangesAsync();
 
@@ -93,7 +94,8 @@ public class UsuariosController : ControllerBase            //clase heredada de 
         return Ok(new
         {
             mensaje = "¡Login exitoso!",
-            token = tokenFinal
+            token = tokenFinal,
+            username = usuario.Username
         });
     }
 
