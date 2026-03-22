@@ -7,7 +7,7 @@
   <nav >
     <ul class="nav">
       <li class="barra">|</li>
-      <li><a routerLink="/">Inicio</a></li>
+      <li><a routerLink="/inicio">Inicio</a></li>
       <li class="barra">|</li>
       <li><a routerLink="/">Cuidados</a></li>
       <li class="barra">|</li>
@@ -35,9 +35,7 @@
       <div class="opcionesPerfil">
         @if (authService.usuarioActual()) {
         <p>Hola, {{ authService.usuarioActual() }}</p>
-        <a style="cursor: pointer" (click)="authService.cerrarSesion(); desplegarPerfil()"
-          >Cerrar sesión</a
-        >
+        <a (click)="authService.cerrarSesion(); desplegarPerfil()">Cerrar sesión</a>
         } @else {
         <a routerLink="/login" (click)="desplegarPerfil()">Iniciar sesión</a>
         <a routerLink="/registro" (click)="desplegarPerfil()">Registrarse</a>
@@ -46,6 +44,5 @@
       }
     </div>
 
-    <span class="icon"> </span>
   </div>
 </header>
