@@ -1,11 +1,11 @@
 # YourCurlyCare
 
-##Requisitos previos:
+##Requisitos previos:##
 Para ejecutar el proyecto solo necesitas tener instalado:
 * Docker Desktop
 * Git
 
-##Pasos para el despliegue:
+##Pasos para el despliegue:##
 1. **Clonar el repositorio** --> 	
 ```bash
  git clone https://github.com/Azaharapp/YourCurlyCare.git
