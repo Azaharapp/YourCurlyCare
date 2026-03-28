@@ -1,0 +1,52 @@
+<div class="container">
+  <h2>Escáner de productos</h2>
+
+  <div id="camara"></div>
+
+  <div class="botones">
+    <button (click)="escanear()">Encender Cámara</button>
+    <button (click)="pararEscaner()">Detener</button>
+  </div>
+
+  @if (productoEncontrado) {
+  <div class="info">
+    <h3>{{ productoEncontrado.esApto ? 'PRODUCTO APTO' : 'NO APTO' }}</h3>
+
+    <div>
+      <p>
+        <strong>{{ productoEncontrado.nombre }}</strong> - {{ productoEncontrado.marca }}
+      </p>
+    </div>
+
+    <div class="detalles">
+      <p>
+        @if (productoEncontrado.alcohol) { - Contiene alcoholes secantes. } @else { - Sin alcoholes
+        malos. }
+      </p>
+
+      <p>
+        @if (productoEncontrado.silicona) { - Contiene siliconas no solubles. } @else { - Sin siliconas.
+        }
+      </p>
+
+      <p>
+        @if (productoEncontrado.sulfato) { - Contiene sulfatos fuertes. } @else { - Sin sulfatos
+        agresivos. }
+      </p>
+
+      @if(!productoEncontrado.alcohol && !productoEncontrado.silicona &&
+      productoEncontrado.sulfato){
+      <p>
+        {{ productoEncontrado.nombre }} no es apto para uso diario, pero sí para el ultimo lavado o
+        reseteo mensual.
+      </p>
+      } 
+      
+      @if(!productoEncontrado.alcohol && !productoEncontrado.silicona &&
+      !productoEncontrado.sulfato){
+      <p>{{ productoEncontrado.nombre }} es 100% apto para uso diario.</p>
+      }
+    </div>
+  </div>
+  }
+</div>

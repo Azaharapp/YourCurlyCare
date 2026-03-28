@@ -1,0 +1,20 @@
+import { HttpClient } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { ProductoEscanerI } from '../models/productoEscaneri';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class ProductosService {
+  private http: HttpClient = inject(HttpClient);
+  private apiUrl: string = "http://localhost:8000/api/ProductoEscaners"               //'http://localhost:5216/api/ProductoEscaners';
+
+  getProducto(codigo: string): Observable<ProductoEscanerI> {
+    return this.http.get<ProductoEscanerI>(`${this.apiUrl}/${codigo}`);
+  }
+
+  registrarProducto(producto: ProductoEscanerI): Observable<ProductoEscanerI> {
+    return this.http.post<ProductoEscanerI>(this.apiUrl, producto);
+  }
+}

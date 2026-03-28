@@ -17,7 +17,8 @@ public class UsuariosController : ControllerBase            //clase heredada de 
     private readonly YourCurlyCareContext _context;         //atributo privado de solo lectura de tipo YourCurlyCareContext
     private readonly IConfiguration _config;
 
-    public UsuariosController(YourCurlyCareContext context, IConfiguration config) // constructor
+    //constructor
+    public UsuariosController(YourCurlyCareContext context, IConfiguration config)
     {
         _context = context;
         _config = config;
@@ -26,16 +27,15 @@ public class UsuariosController : ControllerBase            //clase heredada de 
 
     [HttpGet]                                               //permite usar el metodo get  --> lee
     //metodo asincrono(async) que devuelve una promesa(Task):
-    //ActionResult devuelve codigos de estado HTTP 
-    //IEnumerable permite devolver una lista
+    //ActionResult: devuelve codigos de estado HTTP 
+    //IEnumerable: permite devolver una lista
     public async Task<ActionResult<IEnumerable<Usuario>>> GetUsuarios()
     {
         return await _context.Usuarios.ToListAsync();       //devuelve todos los usuarios en una lista asincrona(await)
     }
 
-
-    // buscar usuario por Id
-    [HttpGet("{id}")]
+    
+    [HttpGet("{id}")]                                       // buscar usuario por Id
     public async Task<ActionResult<Usuario>> GetUsuario(int id)
     {
         var usuario = await _context.Usuarios.FindAsync(id);
@@ -45,31 +45,18 @@ public class UsuariosController : ControllerBase            //clase heredada de 
         return usuario;
     }
 
-
-    //registrar un nuevo uuario --> metodo post
-    [HttpPost]
+    
+    [HttpPost]                                                  //registrar un nuevo uuario --> metodo post
     public async Task<ActionResult<Usuario>> RegistrarUsuario(Usuario usuario)
     {
-        /* SQL Puro --> Es igual que lo de abajo 
-        var emailCount = await _context.Database.SqlQueryRaw<int>(
-            "SELECT COUNT(*) as Value FROM usuarios WHERE email = {0}", 
-            usuario.Email
-        ).SingleAsync();*/
-
-        // version con funciones de Entity Framework  - Hago esta porque es más segura
-        //variable almacena boolean si el email existe o no 
+        //variable almacena booleano si el email existe o no 
         var emailExiste = await _context.Usuarios.AnyAsync(u => u.Email == usuario.Email);
 
-        //si el email ya existe, lanza error
         if (emailExiste) return BadRequest("Este email ya está registrado.");
 
-        //encriptar contraseña de usuario
+        //encripta contraseña de usuario
         usuario.Password = BCrypt.Net.BCrypt.HashPassword(usuario.Password);
 
-        /*await _context.Database.ExecuteSqlRawAsync(
-            "INSERT INTO usuarios (nombre, apellido, username, email, password, fecha_registro) VALUES ({0}, {1}, {2}, {3}, {4}, {5})", 
-            usuario.Nombre, usuario.Apellido, usuario.Username, usuario.Email, usuario.Password, usuario.FechaRegistro
-        ); */
         usuario.FechaRegistro = DateTime.Now;
         _context.Usuarios.Add(usuario);
         await _context.SaveChangesAsync();
@@ -77,13 +64,10 @@ public class UsuariosController : ControllerBase            //clase heredada de 
         return CreatedAtAction(nameof(GetUsuario), new { id = usuario.Id }, usuario);
     }
 
-
-    // inicio de sesion
-    [HttpPost("login")]
+    [HttpPost("login")]                                     //inicio de sesion
     public async Task<ActionResult> Login(LoginRequest request)
     {
-        /*buscar al usuario por su email
-        SELECT * FROM usuarios WHERE email = {0} LIMIT 1; */
+        //buscar al usuario por su email
         var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == request.Email);
         if (usuario == null) return BadRequest("Credenciales incorrectas. Parece que el email no es correcto.");
 
@@ -104,8 +88,7 @@ public class UsuariosController : ControllerBase            //clase heredada de 
         SymmetricSecurityKey claveSegura = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
         SigningCredentials credenciales = new SigningCredentials(claveSegura, SecurityAlgorithms.HmacSha256);
 
-        //datos que iran dentro del token
-        Claim[] datosUsuario = new Claim[]
+        Claim[] datosUsuario = new Claim[]                  //datos que iran dentro del token
         {
             new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()),
             new Claim(ClaimTypes.Email, usuario.Email),

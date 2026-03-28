@@ -1,5 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Akaya+Kanadaka&family=Alegreya:ital,wght@0,400..900;1,400..900&display=swap');
+
 * {
   font-family: 'Alegreya';
+  
+}
+
+footer{
+  width: 100%;
+  background-color: #d0b49f;
 }
 
 .footer {

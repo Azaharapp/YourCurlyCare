@@ -7,21 +7,22 @@ import { UsuarioLogin, UsuarioRegistro } from '../models/usuariosi';
   providedIn: 'root',
 })
 export class AuthService {
-  private http = inject(HttpClient);
-  private apiUrl = "http://localhost:5216/api/usuarios"
+  private http: HttpClient = inject(HttpClient);
+  private apiUrl: string = "http://localhost:8000/api/usuarios";            //"http://localhost:5216/api/usuarios"
 
-  usuarioActual = signal<string | null>(localStorage.getItem('usuarioNombre'));
+  public usuarioActual = signal<string | null>(localStorage.getItem('usuarioNombre'));
 
-  guardarUsuarioActivo(nombre: string) {
+  guardarUsuarioActivo(nombre: string) :void{
     this.usuarioActual.set(nombre);
     localStorage.setItem('usuarioNombre', nombre); 
   }
 
-  cerrarSesion() {
+  cerrarSesion():void {
     this.usuarioActual.set(null);
     localStorage.removeItem('usuarioNombre');
     localStorage.removeItem('token');
   }
+
   registrar(datosUsuario: UsuarioRegistro): Observable<any> {
     return this.http.post(this.apiUrl, datosUsuario);
   }

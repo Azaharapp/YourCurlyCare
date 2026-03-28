@@ -10,10 +10,10 @@ public class RegistroEscaner
 {
     [Key]
     [Column("id")]
-    public int Id { get; set; }
+    public int? Id { get; set; }
 
     [Column("id_usuario")]
-    public int IdUsuario { get; set; }     //campo tal cual de la BD
+    public int IdUsuario { get; set; }                                      //campo tal cual de la BD
     [ForeignKey("IdUsuario")]
     public virtual Usuario Usuario { get; set; } = null!;
 

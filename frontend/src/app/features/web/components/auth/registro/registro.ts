@@ -32,7 +32,7 @@ export class Registro {
         },
 
         error: (errorHttp) => {
-          alert(errorHttp.error || "Hubo un problema al intentar registrarte.");
+          alert(errorHttp.error || "Se ha producido un error al realizar el registro.");
         }
       });
 

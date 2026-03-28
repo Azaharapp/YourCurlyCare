@@ -1,0 +1,222 @@
+@import url('https://fonts.googleapis.com/css2?family=Akaya+Kanadaka&family=Alegreya:ital,wght@0,400..900;1,400..900&display=swap');
+
+* {
+  font-family: 'Alegreya';
+}
+
+.hero img {
+  max-width: 100%;
+  height: auto;
+  opacity: 90%;
+}
+
+.hero {
+  position: relative;
+  display: inline-block;
+  color: black;
+}
+
+.textoHero {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 60px;
+  font-weight: bold;
+
+  font-family: 'Akaya Kanadaka';
+}
+
+.sec1,
+.sec2,
+.sec3, .sec4, .sec5 {
+  margin: 50px;
+}
+
+.sec1 h2 {
+  text-align: center;
+}
+
+h2 {
+  font-family: 'Akaya Kanadaka';
+  font-size: 35px;
+}
+
+button {
+  padding: 8px 25px;
+  margin: 15px;
+  color: white;
+  background-color: #d0b49f;
+  border: 1px solid #ac7f5e;
+  border-radius: 8px;
+  box-shadow: 2px 2px 2px gray;
+
+  display: block;
+  margin: 0 auto;
+}
+
+button:hover {
+  color: black;
+  transform: scale(1.05);
+}
+
+.sec2,
+.sec3, .sec4, .sec5 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+
+  box-sizing: border-box;
+}
+
+.sec2 p, .sec3 p, .sec4 p, .sec5 p{
+  margin: 0;
+}
+
+.imgDerecha {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.imgDerecha img {
+  width: 406px;
+  height: 436px;
+
+  border: 3px solid #ac7f5e;
+  border-radius: 25px;
+}
+
+.textoIzquierda {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-right: 25px;
+
+}
+
+.titulo {
+  background-color: #d0b49f;
+  border-radius: 15px;
+  padding: 10px;
+  border: 2px solid #ac7f5e;
+}
+
+.imgIzquierda {
+  flex: 1;
+  text-align: left;
+}
+
+.imgIzquierda img {
+  width: 406px;
+  height: 436px;
+
+  border: 3px solid #ac7f5e;
+  border-radius: 25px;
+}
+
+.textoDerecha {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-left: 25px;
+
+}
+
+/*----Responsive----*/
+@media (max-width: 800px) {
+  .hero {
+    max-width: 800px;
+  }
+
+  .textoHero {
+    font-size: 40px;
+  }
+
+  p {
+    font-size: 14px;
+    margin: 0;
+  }
+
+  h2 {
+    font-size: 27px;
+  }
+
+  .sec2,
+  .sec3, .sec4, .sec5 {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .textoIzquierda, .textoDerecha {
+    display: contents;
+  }
+
+  .textoIzquierda h2,
+  .textoDerecha h2 {
+    order: 1;
+  }
+
+  .imgDerecha,
+  .imgIzquierda {
+    order: 2;
+    justify-content: center;
+  }
+
+  .textoIzquierda p,
+  .textoDerecha p {
+    order: 3;
+  }
+
+  .lavado {
+    order: 4;
+    width: 100%;
+  }
+
+  .imgDerecha img, .imgIzquierda img {
+    width: 206px;
+    height: 236px;
+  }
+
+  .titulo{
+    width: 100%;
+  }
+  
+  button{
+    margin-top: 20px;
+  }
+  
+}
+
+@media (max-width: 400px) {
+  .hero {
+    max-width: 400px;
+  }
+
+  .textoHero {
+    font-size: 25px;
+  }
+
+  p {
+    font-size: 12px;
+    margin: 1px;
+  }
+
+  h2 {
+    font-size: 20px;
+  }
+
+  button {
+    padding: 6px 15px;
+    font-size: 10px;
+  }
+
+  .imgDerecha img,
+  .imgIzquierda img {
+    width: 156px;
+    height: 186px;
+  }
+}

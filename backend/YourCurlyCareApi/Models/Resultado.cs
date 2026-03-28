@@ -12,7 +12,7 @@ public class Resultado
     public int Id { get; set; }
 
     [Column("id_cuestionario")]
-    public int IdCuestionario { get; set; }     //campo tal cual de la BD
+    public int IdCuestionario { get; set; }                             //campo tal cual de la BD
     [ForeignKey("IdCuestionario")]
     public virtual Cuestionario Cuestionario { get; set; } = null!;
 

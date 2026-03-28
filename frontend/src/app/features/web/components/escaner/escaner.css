@@ -1,0 +1,110 @@
+@import url('https://fonts.googleapis.com/css2?family=Akaya+Kanadaka&family=Alegreya:ital,wght@0,400..900;1,400..900&display=swap');
+
+* {
+  font-family: 'Alegreya';
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  text-align: center;
+}
+
+h2 {
+  font-family: 'Akaya Kanadaka';
+  font-size: 35px;
+  text-align: center;
+}
+
+h3{
+  font-family: 'Akaya Kanadaka';
+}
+
+button {
+  padding: 8px 25px;
+  margin: 15px;
+  color: white;
+  background-color: #d0b49f;
+  border: 1px solid #ac7f5e;
+  border-radius: 8px;
+  box-shadow: 2px 2px 2px gray;
+
+  /*display: block;
+  margin: 0 auto;*/
+}
+
+button:hover {
+  color: black;
+  transform: scale(1.05);
+}
+
+.botones {
+  text-align: center;
+}
+
+#camara {
+  width: 100%;
+  max-width: 600px;
+  height: 300px;
+  background: white;
+  text-align: center;
+  border: 3px solid #ac7f5e;
+  position: relative;
+  overflow: hidden;
+}
+
+#camara video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.info{
+  border: 5px solid #ac7f5e;
+  box-shadow: 2px 2px 2px gray;
+  border-radius: 15px;
+  background: #d0b49f;
+
+  width: 100%;
+  max-width: 500px;
+
+  padding: 20px 50px;
+  margin: 50px;
+}
+
+.detalles{
+  border: 2px solid #ac7f5e;
+  padding: 10px 15px;
+}
+
+.detalles p{
+  text-align: left;
+}
+
+@media (max-width: 800px) {
+  #camara {
+    max-width: 450px;
+  }
+
+  .info{
+    max-width: 350px;
+  }
+}
+
+@media (max-width: 400px) {
+  button {
+    padding: 6px 15px;
+    font-size: 10px;
+  }
+
+  #camara {
+    max-width: 300px;
+  }
+
+  .info{
+    max-width: 200px;
+  }
+}

@@ -12,20 +12,35 @@ public class ProductoEscaner
     [Column("id")]
     public int Id { get; set; }
 
-    [Column("codigo_barras")]
-    public string? CodigoBarras { get; set; }
-
     [Required]
-    [Column("descripcion")]
-    public string Descripcion { get; set; } = null!;
+    [Column("codigo_barras")]
+    public string CodigoBarras { get; set; } = null!;
 
     [Required]
     [Column("nombre")]
     public string Nombre { get; set; } = null!;
 
+    [Required]
+    [Column("marca")]
+    public string Marca { get; set; } = null!;
+
+    [Required]
+    [Column("ingredientes")]
+    public string Ingredientes { get; set; } = null!;
+
+    [Required]
     [Column("alcohol")]
     public bool Alcohol { get; set; }
 
+    [Required]
     [Column("silicona")]
     public bool Silicona { get; set; }
+
+    [Required]
+    [Column("sulfato")]
+    public bool Sulfato { get; set; }
+
+    [Required]
+    [Column("es_apto")]
+    public bool EsApto { get; set; }
 }

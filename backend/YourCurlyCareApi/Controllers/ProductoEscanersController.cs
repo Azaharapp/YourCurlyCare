@@ -17,12 +17,12 @@ public class ProductoEscanersController : ControllerBase
         _context = context;
     }
 
-    [HttpGet]
+    [HttpGet]                                                                   //listado de todos los productos
     public async Task<ActionResult<IEnumerable<ProductoEscaner>>> GetProductoEscaners()
         => await _context.ProductoEscaners.ToListAsync();
 
 
-    [HttpGet("{id}")]
+    [HttpGet("{id:int}")]                                                       //busquedas por id
     public async Task<ActionResult<ProductoEscaner>> GetProductoEscaner(int id)
     {
         var productoEscaner = await _context.ProductoEscaners.FindAsync(id);
@@ -31,5 +31,21 @@ public class ProductoEscanersController : ControllerBase
 
         return productoEscaner;
     }
+
+
+    [HttpGet("{codigo}")]                                                       //devuelve el codigo de barras del producto escaneado
+    public async Task<ActionResult<ProductoEscaner>> GetProducto(string codigo)
+    {
+        var producto = await _context.ProductoEscaners
+            .FirstOrDefaultAsync(p => p.CodigoBarras == codigo);
+
+        if (producto == null) return NotFound();
+
+        return Ok(producto);
+    }
+
+
+
+
 }
 
