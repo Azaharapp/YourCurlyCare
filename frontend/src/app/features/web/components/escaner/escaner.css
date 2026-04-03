@@ -10,7 +10,6 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  text-align: center;
 }
 
 h2 {
@@ -19,8 +18,9 @@ h2 {
   text-align: center;
 }
 
-h3{
+h3 {
   font-family: 'Akaya Kanadaka';
+  text-align: center;
 }
 
 button {
@@ -62,7 +62,7 @@ button:hover {
   object-fit: cover;
 }
 
-.info{
+.info {
   border: 5px solid #ac7f5e;
   box-shadow: 2px 2px 2px gray;
   border-radius: 15px;
@@ -75,23 +75,65 @@ button:hover {
   margin: 50px;
 }
 
-.detalles{
+.detalles {
   border: 2px solid #ac7f5e;
   padding: 10px 15px;
 }
 
-.detalles p{
+.detalles p {
   text-align: left;
 }
 
+.campos {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+label {
+  font-size: 16px;
+  color: black;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+input,
+textarea {
+  padding: 6px 8px;
+  border: 2px solid #d0b49f;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: border-color 0.3s ease;
+  font-family: inherit;
+  width: 100%;
+  box-sizing: border-box;margin-bottom: 10px;
+}
+
+textarea {
+  margin-top: 10px;
+}
+
+.formulario {
+  max-width: 600px;
+  margin: 30px auto;
+  padding: 20px;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 5px gray;
+  /*text-align: center;*/
+  box-sizing: border-box;
+}
+
 @media (max-width: 800px) {
-  #camara {
+  #camara, .formulario{
     max-width: 450px;
   }
 
-  .info{
+  .info {
     max-width: 350px;
   }
+
+  
 }
 
 @media (max-width: 400px) {
@@ -100,11 +142,11 @@ button:hover {
     font-size: 10px;
   }
 
-  #camara {
+  #camara, .formulario{
     max-width: 300px;
   }
 
-  .info{
+  .info {
     max-width: 200px;
   }
 }

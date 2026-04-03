@@ -9,12 +9,17 @@ import { ProductoEscanerI } from '../models/productoEscaneri';
 export class ProductosService {
   private http: HttpClient = inject(HttpClient);
   private apiUrl: string = "http://localhost:8000/api/ProductoEscaners"               //'http://localhost:5216/api/ProductoEscaners';
+ // private apiUrl: string = 'http://localhost:5216/api/ProductoEscaners';
 
   getProducto(codigo: string): Observable<ProductoEscanerI> {
     return this.http.get<ProductoEscanerI>(`${this.apiUrl}/${codigo}`);
   }
 
-  registrarProducto(producto: ProductoEscanerI): Observable<ProductoEscanerI> {
-    return this.http.post<ProductoEscanerI>(this.apiUrl, producto);
+ registrarProducto(producto:any): Observable<ProductoEscanerI> {
+    return this.http.post<ProductoEscanerI>(`${this.apiUrl}/escanear`, producto);
   }
+
+  /*registrarProducto(datos: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/escanear`, datos);
+  }*/
 }

@@ -25,6 +25,9 @@ export class Login {
           if (respuesta.token)
             localStorage.setItem('token', respuesta.token);
 
+          //Se pasa a string porque el localstorage solo admite texto
+          if(respuesta.userId) localStorage.setItem('usuarioId', respuesta.userId.toString());
+          
           this.authService.guardarUsuarioActivo(respuesta.username);
           this.router.navigate(['/']);
         },

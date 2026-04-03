@@ -25,8 +25,12 @@ export class Registro {
 
       this.authService.registrar(nuevoUsuario).subscribe({
 
-        next: () => {
+        next: (respuesta) => {
           this.authService.guardarUsuarioActivo(nuevoUsuario.username);
+
+          if (respuesta && respuesta.id) 
+            localStorage.setItem('usuarioId', respuesta.id.toString());
+          
 
           this.router.navigate(['/']);
         },
