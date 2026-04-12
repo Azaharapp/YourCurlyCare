@@ -8,8 +8,8 @@ import { ProductoEscanerI } from '../models/productoEscaneri';
 })
 export class ProductosService {
   private http: HttpClient = inject(HttpClient);
- private apiUrl: string = "http://localhost:8000/api/ProductoEscaners"              
-  // private apiUrl: string = 'http://localhost:5216/api/ProductoEscaners';
+  private apiUrl: string = "http://localhost:8000/api/ProductoEscaners"              
+  //private apiUrl: string = 'http://localhost:5216/api/ProductoEscaners';
 
   getProducto(codigo: string): Observable<ProductoEscanerI> {
     return this.http.get<ProductoEscanerI>(`${this.apiUrl}/${codigo}`);
