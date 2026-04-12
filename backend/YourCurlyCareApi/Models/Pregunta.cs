@@ -11,10 +11,10 @@ public class Pregunta
     [Column("id")]
     public int Id { get; set; }
 
-    [Column("id_usuario")]
+  /*  [Column("id_usuario")]
     public int IdUsuario { get; set; }                              //campo tal cual de la BD
     [ForeignKey("IdUsuario")]
-    public virtual Usuario Usuario { get; set; } = null!;
+    public virtual Usuario Usuario { get; set; } = null!;*/
 
     [Column("id_cuestionario")]
     public int IdCuestionario { get; set; }                         //campo tal cual de la BD

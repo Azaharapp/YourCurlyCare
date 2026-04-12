@@ -8,11 +8,6 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth-service';
 import { Router } from '@angular/router';
 
-//se declaran fuera porque dentro de la clase fallan
-const ALCOHOLES: string[] = ["ISOPROPYL ALCOHOL", "DENATURED ALCOHOL", "SD ALCOHOL 40", "WITCH HAZEL", "ISOPROPANOL", "ETHANOL", "SD ALCOHOL", "PROPANOL", "PROPYL ALCOHOL"];
-const SILICONAS: string[] = ["AMODIMETHICONE", "BEHENOXY DIMETHICONE", "BIS-AMINOPROPYL DIMETHICONE", "BISAMINO PEG/PPG-41/3 AMINOETHY", "BIS-CETEARYL AMODIMETHICONE", "BIS-HYDRXY/METHOXY AMODIMETHICONE", "BIS-PHENYLPROPYL DIMETHICONE", "CYCLOHEXENE", "CETEARYL METHICONE", "CETYL DIMETHICONE", "CYCLOPENTASILOXANE", "DIMETHICONE", "DIMETHICONOL", "ISOHEXADECANE", "HEXAMETHYL DISILOXANE", "HEXAMETHYLDISILOXANE", "PHENYL TRIMETHICONE", "PIPERIDINYL DIMETHICONE", "PG-PROPYL DIMETHICONE", "PROPOXYTETRAMETHYL PIPERIDINYL DIMETHICONE", "STEAROXY DIMETHICONE", "STEARYL DIMETHICONE", "TRIMETHYLSILYLAMODIMETHICONE", "TRISILOXANE"];
-const SULFATOS: string[] = ["DOICTYL SODIUM SULFOSUCCINATE", "SODIUM LAURETH SULFATE", "SODIUM TRIDECETH SULFATE", "SODIUM MYRETH SULFATE", "ETHYL PEG-15 COCAMINE SULFATE", "SODIUM ALKYLBENZENE SULFONATE", "SODIUM C14-C16 OLEFIN SULFONATE", "SODIUM DODECYL SULFATE", "SODIUM LAURYL SULFATE", "AMMONIUM LAURYL SULFATE", "AMMONIUM LAURETH SULFATE"];
-
 @Component({
   selector: 'app-escaner',
   imports: [CommonModule,
@@ -36,6 +31,10 @@ export class Escaner {
 
   public productoEncontrado: ProductoEscanerI | null = null;
 
+  public alcoholesEncontrados: string[] = [];
+  public siliconasEncontradas: string[] = [];
+  public sulfatosEncontrados: string[] = [];
+
 
   comprobarAcceso(): void {
     if (this.authService.isLogguedIn()) this.escanear();
@@ -45,10 +44,10 @@ export class Escaner {
     }
   }
 
-pararEscaner(): void {
+  pararEscaner(): void {
     Quagga.stop();
   }
-  
+
   escanear(): void {
     this.productoEncontrado = null;
     this.mostrarFormulario = false;
@@ -90,7 +89,7 @@ pararEscaner(): void {
 
       this.productosService.getProducto(codigo).subscribe({
         next: (respuesta) => {
-          this.productoEncontrado = respuesta;
+          this.cargarDatosProducto(respuesta);
           this.pararEscaner();
         },
         error: () => {
@@ -127,11 +126,11 @@ pararEscaner(): void {
   }
 
   public guardarNuevoProducto(): void {
-    const texto = this.ingredientesExtraidos.toUpperCase();
+    const analisis = this.analizarIngredientes(this.ingredientesExtraidos);
 
-    const tieneAlcohol = ALCOHOLES.some(alc => texto.includes(alc));
-    const tieneSilicona = SILICONAS.some(sil => texto.includes(sil));
-    const tieneSulfatos = SULFATOS.some(sul => texto.includes(sul));
+    this.alcoholesEncontrados = analisis.nombresAlcoholes;
+    this.siliconasEncontradas = analisis.nombresSiliconas;
+    this.sulfatosEncontrados = analisis.nombresSulfatos;
 
     const idUsuario = parseInt(localStorage.getItem('usuarioId') || '0');
 
@@ -140,20 +139,63 @@ pararEscaner(): void {
       nombre: this.nombreNuevo,
       marca: this.marcaNueva,
       ingredientes: this.ingredientesExtraidos,
-      alcohol: tieneAlcohol,
-      silicona: tieneSilicona,
-      sulfato: tieneSulfatos,
-      esApto: !tieneAlcohol && !tieneSilicona && !tieneSulfatos || tieneSulfatos,
+      alcohol: analisis.tieneAlcohol,
+      silicona: analisis.tieneSilicona,
+      sulfato: analisis.tieneSulfatos,
+      esApto: !analisis.tieneAlcohol && !analisis.tieneSilicona && !analisis.tieneSulfatos || analisis.tieneSulfatos,
       usuarioId: idUsuario
     };
 
     this.productosService.registrarProducto(paqueteEscaneo).subscribe({
       next: (res: ProductoEscanerI) => {
-        this.productoEncontrado = res;
+        this.cargarDatosProducto(res);
         this.mostrarFormulario = false;
         alert("Producto analizado y guardado con éxito.");
       },
       error: (err) => console.error("Error al guardar:", err)
     });
+  }
+
+  //expresiones regulares para evitar confusiones con espacios (\\b) al principio y final de la palabra y comas (,) al final 
+  analizarIngredientes(ingredientes: string) {
+    const ALCOHOLES: string[] = ["ISOPROPYL ALCOHOL", "ALCOHOL DENAT", "DENATURED ALCOHOL", "SD ALCOHOL 40", "WITCH HAZEL", "ISOPROPANOL", "ETHANOL", "SD ALCOHOL", "PROPANOL", "PROPYL ALCOHOL"];
+    const SILICONAS: string[] = ["AMODIMETHICONE", "BEHENOXY DIMETHICONE", "BIS-AMINOPROPYL DIMETHICONE", "BISAMINO PEG/PPG-41/3 AMINOETHY", "BIS-CETEARYL AMODIMETHICONE", "BIS-HYDRXY/METHOXY AMODIMETHICONE", "BIS-PHENYLPROPYL DIMETHICONE", "CYCLOHEXENE", "CETEARYL METHICONE", "CETYL DIMETHICONE", "CYCLOPENTASILOXANE", "DIMETHICONE", "DIMETHICONOL", "ISOHEXADECANE", "HEXAMETHYL DISILOXANE", "HEXAMETHYLDISILOXANE", "PHENYL TRIMETHICONE", "PIPERIDINYL DIMETHICONE", "PG-PROPYL DIMETHICONE", "PROPOXYTETRAMETHYL PIPERIDINYL DIMETHICONE", "STEAROXY DIMETHICONE", "STEARYL DIMETHICONE", "TRIMETHYLSILYLAMODIMETHICONE", "TRISILOXANE"];
+    const SULFATOS: string[] = ["DOICTYL SODIUM SULFOSUCCINATE", "SODIUM LAURETH SULFATE", "SODIUM TRIDECETH SULFATE", "SODIUM MYRETH SULFATE", "ETHYL PEG-15 COCAMINE SULFATE", "SODIUM ALKYLBENZENE SULFONATE", "SODIUM C14-C16 OLEFIN SULFONATE", "SODIUM DODECYL SULFATE", "SODIUM LAURYL SULFATE", "AMMONIUM LAURYL SULFATE", "AMMONIUM LAURETH SULFATE"];
+
+    const patronAlcohol = new RegExp(`\\b(${ALCOHOLES.join('|')})\\b\\.?,?`, 'g');
+    const patronSilicona = new RegExp(`\\b(${SILICONAS.join('|')})\\b\\.?,?`, 'g');
+    const patronSulfato = new RegExp(`\\b(${SULFATOS.join('|')})\\b\\.?,?`, 'g');
+
+    const textoMayusculas = ingredientes.toUpperCase();
+
+    const matchesAlcoholes = (textoMayusculas.match(patronAlcohol) || []).map(m => m.replace(',', '').trim());
+    const matchesSiliconas = (textoMayusculas.match(patronSilicona) || []).map(m => m.replace(',', '').trim());
+    const matchesSulfatos = (textoMayusculas.match(patronSulfato) || []).map(m => m.replace(',', '').trim());
+
+    return {
+      tieneAlcohol: matchesAlcoholes.length > 0,
+      tieneSilicona: matchesSiliconas.length > 0,
+      tieneSulfatos: matchesSulfatos.length > 0,
+      nombresAlcoholes: matchesAlcoholes,
+      nombresSiliconas: matchesSiliconas,
+      nombresSulfatos: matchesSulfatos
+    };
+  }
+
+  public cargarDatosProducto(producto: ProductoEscanerI): void {
+
+    this.productoEncontrado = producto;
+
+    if (producto.ingredientes && producto.ingredientes.trim() !== '') {
+      const analisis = this.analizarIngredientes(producto.ingredientes);
+      
+      this.alcoholesEncontrados = analisis.nombresAlcoholes;
+      this.siliconasEncontradas = analisis.nombresSiliconas;
+      this.sulfatosEncontrados = analisis.nombresSulfatos;
+    } else {
+      this.alcoholesEncontrados = [];
+      this.siliconasEncontradas = [];
+      this.sulfatosEncontrados = [];
+    }
   }
 }

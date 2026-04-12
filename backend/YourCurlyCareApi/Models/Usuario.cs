@@ -5,14 +5,14 @@ using Microsoft.EntityFrameworkCore;
 namespace YourCurlyCareApi.Models;
 
 [Table("usuario")]                          //nombre exacto de la tabla en la BD
-//definimos que tanto username como email son unique 
+//define que tanto username como email son unique 
 [Index(nameof(Username), IsUnique = true)]
 [Index(nameof(Email), IsUnique = true)]
 
 public class Usuario
 {
     [Key]                                   //indica que es la clave primaria
-    [Column("id")]
+    [Column("id")]                          //nombre del atributo en la tabla de la base de datos
     public int Id { get; set; }
 
     [Required]                              //es obligatorio --> not null
@@ -37,4 +37,10 @@ public class Usuario
 
     [Column("fecha_registro")]
     public DateTime? FechaRegistro { get; set; }
+
+    [Column("email_confirmado")]
+    public bool EmailConfirmado { get; set; } = false;
+
+    [Column("codigo_verificacion")]
+    public string? CodigoVerificacion { get; set; }
 }

@@ -8,17 +8,17 @@ import { UsuarioLogin, UsuarioRegistro } from '../models/usuariosi';
 })
 export class AuthService {
   private http: HttpClient = inject(HttpClient);
-private apiUrl: string = "http://localhost:8000/api/usuarios";            //"http://localhost:5216/api/usuarios"
- // private apiUrl: string = "http://localhost:5216/api/usuarios"
+  private apiUrl: string = "http://localhost:8000/api/usuarios";            
+  //private apiUrl: string = "http://localhost:5216/api/usuarios"
 
   public usuarioActual = signal<string | null>(localStorage.getItem('usuarioNombre'));
 
-  guardarUsuarioActivo(nombre: string) :void{
+  guardarUsuarioActivo(nombre: string): void {
     this.usuarioActual.set(nombre);
-    localStorage.setItem('usuarioNombre', nombre); 
+    localStorage.setItem('usuarioNombre', nombre);
   }
 
-  cerrarSesion():void {
+  cerrarSesion(): void {
     this.usuarioActual.set(null);
     localStorage.removeItem('usuarioNombre');
     localStorage.removeItem('token');
@@ -36,9 +36,14 @@ private apiUrl: string = "http://localhost:8000/api/usuarios";            //"htt
   isLogguedIn(): boolean {
     const token = localStorage.getItem('token');
 
-   // return token !== null && token !== '' ? true : false;
-   return token !== null && token !== '' && token !== 'null';
+    return token !== null && token !== '' && token !== 'null';
   }
 
+  recuperarPassword(email: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/olvidar-pass`,  { email } );
+  }
 
+  resetearPassword(datos: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/reset-pass`, datos);
+  }
 }

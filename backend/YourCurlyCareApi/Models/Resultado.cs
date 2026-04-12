@@ -16,8 +16,8 @@ public class Resultado
     [ForeignKey("IdCuestionario")]
     public virtual Cuestionario Cuestionario { get; set; } = null!;
 
-    [Column("resultado")]
-    public string? Enunciado { get; set; }
+    [Column("resultado_final")]
+    public string? ResultadoFinal { get; set; }
     
     [Column("fecha_realizacion")]
     public DateTime FechaRealizacion { get; set; }

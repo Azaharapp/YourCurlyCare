@@ -1,0 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Akaya+Kanadaka&family=Alegreya:ital,wght@0,400..900;1,400..900&display=swap');
+
+* {
+  font-family: 'Alegreya';
+}
+
+h2 {
+  font-family: 'Akaya Kanadaka';
+  font-size: 35px;
+  text-align: center;
+}
+
+.titulo {
+  text-align: center;
+}
+
+.titulo img,
+.titulo h2 {
+  display: inline-block;
+  vertical-align: middle;
+  margin: 50px 10px;
+}
+
+@media (max-width: 800px) {
+  h2 {
+    font-size: 24px;
+  }
+
+  .titulo{
+    max-width: 800px;
+  }
+
+  .titulo img, .titulo h2{
+  margin: 40px 4px;
+  }
+
+  .titulo img{
+    width: 25px;
+    height: auto;
+  }
+}
+
+@media (max-width: 400px) {
+    h2 {
+      font-size: 18px;
+    }
+  
+    .titulo{
+      max-width: 400px;
+    }
+  
+    .titulo img{
+      width: 23px;
+      height: auto;
+    }
+  }
+

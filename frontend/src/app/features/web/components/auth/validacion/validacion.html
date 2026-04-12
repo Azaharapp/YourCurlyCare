@@ -1,0 +1,12 @@
+<div class="container">
+  <h2>Verifica tu correo</h2>
+  <p>Te hemos enviado un código de 6 dígitos a tu bandeja de entrada.</p>
+
+  <div class="form">
+    <input type="text" [(ngModel)]="codigo" placeholder="000000" maxlength="6" class="codigo-input"/>
+  </div>
+
+  <button (click)="enviarCodigo()" [disabled]="codigo.length < 6">Verificar Cuenta</button>
+
+  <p>@if(mensajeError) {{{ mensajeError }}}</p>
+</div>

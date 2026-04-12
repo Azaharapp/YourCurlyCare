@@ -1,0 +1,73 @@
+@import url('https://fonts.googleapis.com/css2?family=Akaya+Kanadaka&family=Alegreya:ital,wght@0,400..900;1,400..900&display=swap');
+
+* {
+  font-family: 'Alegreya';
+  text-align: center;
+}
+
+.container {
+  max-width: 400px;
+  margin: 60px auto;
+  padding: 40px;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 5px gray;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+h2 {
+  color: #ac7f5e;
+  margin-bottom: 15px;
+  font-size: 24px;
+  font-family: 'Akaya Kanadaka';
+}
+
+input {
+  padding: 6px 8px;
+  border: 1px solid #d0b49f;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: border-color 0.3s ease;
+  font-family: inherit;
+  margin-bottom: 20px;
+  margin: 15px;
+}
+
+button {
+  padding: 8px 25px;
+  color: white;
+  background-color: #d0b49f;
+  border: 1px solid #ac7f5e;
+  border-radius: 8px;
+  box-shadow: 2px 2px 2px gray;
+}
+
+button:hover {
+  color: black;
+  padding: 9px 28px;
+}
+
+@media (max-width: 800px) {
+  .container {
+    width: 90%;
+    margin: 30px auto;
+    box-sizing: border-box;
+    padding: 25px 20px;
+  }
+
+  h2 {
+    font-size: 20px;
+  }
+
+  input {
+    font-size: 10px;
+    padding: 3px 4px;
+  }
+}
+
+@media (max-width: 400px) {
+  .container {
+    max-width: 350px;
+  }
+}
