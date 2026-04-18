@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, output } from '@angular/core';
 import Quagga from '@ericblade/quagga2';
 import Tesseract from 'tesseract.js';
 import { ProductosService } from '../../services/productos-service';
@@ -34,7 +34,6 @@ export class Escaner {
   public alcoholesEncontrados: string[] = [];
   public siliconasEncontradas: string[] = [];
   public sulfatosEncontrados: string[] = [];
-
 
   comprobarAcceso(): void {
     if (this.authService.isLogguedIn()) this.escanear();
@@ -126,6 +125,8 @@ export class Escaner {
   }
 
   public guardarNuevoProducto(): void {
+    if (!this.nombreNuevo || !this.marcaNueva || !this.ingredientesExtraidos || this.cargando) return alert("Faltan campos por rellenar.");
+
     const analisis = this.analizarIngredientes(this.ingredientesExtraidos);
 
     this.alcoholesEncontrados = analisis.nombresAlcoholes;
@@ -154,6 +155,10 @@ export class Escaner {
       },
       error: (err) => console.error("Error al guardar:", err)
     });
+
+    this.nombreNuevo = '';
+    this.marcaNueva = '';
+    this.ingredientesExtraidos = '';
   }
 
   //expresiones regulares para evitar confusiones con espacios (\\b) al principio y final de la palabra y comas (,) al final 
@@ -188,7 +193,7 @@ export class Escaner {
 
     if (producto.ingredientes && producto.ingredientes.trim() !== '') {
       const analisis = this.analizarIngredientes(producto.ingredientes);
-      
+
       this.alcoholesEncontrados = analisis.nombresAlcoholes;
       this.siliconasEncontradas = analisis.nombresSiliconas;
       this.sulfatosEncontrados = analisis.nombresSulfatos;

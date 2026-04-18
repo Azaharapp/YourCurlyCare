@@ -65,7 +65,7 @@ public class ProductoEscanersController : ControllerBase
                 Ingredientes = datos.Ingredientes,
                 Alcohol = datos.Alcohol,
                 Silicona = datos.Silicona,
-                Sulfato = datos.Sulfato, 
+                Sulfato = datos.Sulfato,
                 EsApto = datos.EsApto
             };
 
@@ -78,7 +78,7 @@ public class ProductoEscanersController : ControllerBase
             IdProductoE = producto.Id,
             IdUsuario = datos.UsuarioId,
             FechaEscaner = DateTime.Now,
-            Respuesta = producto.EsApto 
+            Respuesta = producto.EsApto
         };
 
         _context.RegistroEscaners.Add(nuevoRegistro);
@@ -87,6 +87,18 @@ public class ProductoEscanersController : ControllerBase
         return Ok(producto);
     }
 
+    [HttpGet("buscar")]
+    public async Task<ActionResult<IEnumerable<ProductoEscaner>>> BuscarProductos([FromQuery] string termino)
+    {
+        if (string.IsNullOrWhiteSpace(termino))
+            return BadRequest("El término de búsqueda no puede estar vacío.");
+
+        var resultados = await _context.ProductoEscaners
+            .Where(p => p.Nombre.Contains(termino) || p.Marca.Contains(termino))
+            .Take(15).ToListAsync();
+
+        return resultados;
+    }
 
 }
 

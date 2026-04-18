@@ -81,9 +81,11 @@
         placeholder="Los ingredientes son..." required
       ></textarea>
     </div>
+
     <div class="botones">
-      <button (click)="guardarNuevoProducto()" [disabled]="!nombreNuevo || !marcaNueva || !ingredientesExtraidos || cargando">Guardar</button>
+      <button (click)="guardarNuevoProducto()">Guardar</button>
     </div>
   </div>
+  
   }
 </div>

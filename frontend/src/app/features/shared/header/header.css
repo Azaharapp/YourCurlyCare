@@ -71,6 +71,34 @@ nav {
   border-radius: 25px;
   padding: 5px 15px;
   gap: 10px;
+
+  position: relative;
+}
+
+.sugerencias {
+  position: absolute;
+  top: 100%; 
+  left: 0;
+  width: 100%; 
+  background-color: #d0b49f; 
+  border-radius: 8px;
+  border: 1px solid #ac7f5e; 
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5); 
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 0 0; 
+  overflow: hidden;
+  z-index: 20; 
+}
+
+.sugerencias li {
+  padding: 12px 20px;
+  margin: 0;
+  color: black;
+  font-size: 14px;
+  cursor: pointer;
+  border-bottom: 1px solid #ac7f5e; 
+  display: flex;
 }
 
 .containerSearch input {

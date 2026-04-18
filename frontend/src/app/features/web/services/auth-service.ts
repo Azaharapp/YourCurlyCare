@@ -8,8 +8,8 @@ import { UsuarioLogin, UsuarioRegistro } from '../models/usuariosi';
 })
 export class AuthService {
   private http: HttpClient = inject(HttpClient);
-  private apiUrl: string = "http://localhost:8000/api/usuarios";            
-  //private apiUrl: string = "http://localhost:5216/api/usuarios"
+  //private apiUrl: string = "http://localhost:8000/api/usuarios";            
+  private apiUrl: string = "http://127.0.0.1:5216/api/usuarios"
 
   public usuarioActual = signal<string | null>(localStorage.getItem('usuarioNombre'));
 

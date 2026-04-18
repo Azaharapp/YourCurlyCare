@@ -5,17 +5,13 @@
 }
 
 footer{
-  width: 100%;
-  background-color: #d0b49f;
-}
-
-.footer {
   background-color: #d0b49f;
   padding: 30px;
   text-align: center;
 
   width: 100%;
   box-sizing: border-box;
+  margin: 0;
 }
 
 .redesSociales {
