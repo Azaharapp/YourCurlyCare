@@ -1,9 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace YourCurlyCareApi.Models;
 
-public enum Opcion { a, b, c }
 [Table("respuesta")]
 
 public class Respuesta
@@ -28,7 +28,7 @@ public class Respuesta
     public virtual Pregunta Pregunta { get; set; } = null!;
 
     [Column("opcion")]
-    public Opcion Opcion { get; set; }
+    public string Opcion { get; set; } = null!;
 
     [Column("fecha_realizacion")]
     public DateTime FechaRealizacion { get; set; }

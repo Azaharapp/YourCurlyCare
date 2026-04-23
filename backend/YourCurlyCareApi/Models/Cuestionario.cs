@@ -13,8 +13,8 @@ public class Cuestionario
     [Column("id")]
     public int Id { get; set; }
 
-    [Column("n_preguntas")]
-    public int? NPreguntas { get; set; }
+    [Column("n_pregunta")]
+    public int? NPregunta { get; set; }
 
     [Column("fecha_creacion")]
     public DateTime FechaCreacion { get; set; }

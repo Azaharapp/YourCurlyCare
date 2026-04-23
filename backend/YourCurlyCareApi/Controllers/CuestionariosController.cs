@@ -29,7 +29,7 @@ public class CuestionariosController : ControllerBase
     {
         var cuestionario = await _context.Cuestionarios.FindAsync(id);
 
-        if (cuestionario == null) return NotFound();
+        if (cuestionario == null) return NotFound("El cuestionario no existe");
 
         return cuestionario;
     }
@@ -54,7 +54,7 @@ public class CuestionariosController : ControllerBase
                 _context.Respuestas.Add(nuevaRespuesta);
             }
 
-            string resultadoFinal = CalcularPorosidad(lote.Respuestas);
+            string resultadoFinal = CalcularTipoRizo(lote.Respuestas);
 
             var resultadoDB = new Resultado
             {
@@ -64,8 +64,8 @@ public class CuestionariosController : ControllerBase
             };
             _context.Resultados.Add(resultadoDB);
 
-            var cuestionario = await _context.Cuestionarios.FindAsync(lote.CuestionarioId);
-            if (cuestionario != null) cuestionario.Estado = EstadoCuestionario.Entregado;
+            //var cuestionario = await _context.Cuestionarios.FindAsync(lote.CuestionarioId);
+            //if (cuestionario != null) cuestionario.Estado = EstadoCuestionario.Entregado;
 
             await _context.SaveChangesAsync();
             await transaction.CommitAsync();
@@ -80,31 +80,40 @@ public class CuestionariosController : ControllerBase
     }
 
 
-    private string CalcularPorosidad(List<DetalleRespuesta> respuestas)
+    private string CalcularTipoRizo(List<DetalleRespuesta> respuestas)
     {
-        int a = respuestas.Count(r => r.Opcion == Opcion.a);
-        int b = respuestas.Count(r => r.Opcion == Opcion.b);
-        int c = respuestas.Count(r => r.Opcion == Opcion.c);
+        int a = respuestas.Count(r => r.Opcion == "a");
+        int b = respuestas.Count(r => r.Opcion == "b");
+        int c = respuestas.Count(r => r.Opcion == "c");
 
-        if (a > b && a > c) return "Porosidad Baja";
-        if (c > a && c > b) return "Porosidad Alta";
-        return "Porosidad Media";
+        //empate de opciones o diferencia de 1 punto
+        if (Math.Abs(a - b) <= 1 && a > c && b > c) return "Mixto 2C-3A";
+        if (Math.Abs(b - c) <= 1 && b > a && c > a) return "Mixto 3C-4A";
+
+        //si la opcion es la más elegida a diferencia de más de 1 punto
+        if (a >= b && a >= c) return "Tipo 2";
+        if (b >= a && b >= c) return "Tipo 3";
+        if (c >= a && c >= b) return "Tipo 4";
+
+
+        return "";
     }
 
 
-  [HttpGet("{id}/preguntas")]
-public async Task<ActionResult<IEnumerable<Pregunta>>> GetPreguntas(int id)
-{
-    var listaPreguntas = await _context.Preguntas
-        .Where(p => p.IdCuestionario == id)
-        .ToListAsync();
+    [HttpGet("{id}/preguntas")]
+    public async Task<ActionResult<IEnumerable<Pregunta>>> GetPreguntas(int id)
+    {
+        var listaPreguntas = await _context.Preguntas
+            .Where(p => p.IdCuestionario == id)
+            .ToListAsync();
 
-    if (listaPreguntas == null || listaPreguntas.Count == 0) {
-        return NotFound();
+        if (listaPreguntas == null || listaPreguntas.Count == 0)
+        {
+            return NotFound();
+        }
+
+        return Ok(listaPreguntas);
     }
-
-    return Ok(listaPreguntas);
-}
 }
 
 

@@ -19,5 +19,5 @@ public class DetalleRespuesta
     public int PreguntaId { get; set; }
 
     [JsonPropertyName("opcion")]
-    public Opcion Opcion { get; set; }
+    public string Opcion { get; set; } = null!;
 }

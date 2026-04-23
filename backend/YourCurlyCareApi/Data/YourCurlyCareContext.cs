@@ -20,3 +20,4 @@ public class YourCurlyCareContext : DbContext               //clase hereda de Db
     public DbSet<ProductoEscaner> ProductoEscaners { get; set; }
     public DbSet<RegistroEscaner> RegistroEscaners { get; set; }
 }
+

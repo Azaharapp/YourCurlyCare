@@ -19,8 +19,8 @@ export class Validacion {
   enviarCodigo() {
     const body = { codigo: this.codigo };
 
-    this.http.post('http://127.0.0.1:5216/api/Usuarios/confirmar', body, {
-    //this.http.post('http://localhost:8000/api/Usuarios/confirmar', body, {
+    //this.http.post('http://127.0.0.1:5216/api/Usuarios/confirmar', body, {
+    this.http.post('http://localhost:8000/api/Usuarios/confirmar', body, {
       headers: { 'Content-Type': 'application/json' }
     }).subscribe({
       next: () => {
