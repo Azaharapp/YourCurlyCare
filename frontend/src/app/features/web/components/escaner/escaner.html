@@ -1,0 +1,91 @@
+<div class="container">
+  <h2>Escáner de productos</h2>
+
+  <div id="camara"></div>
+
+  <div class="botones">
+    <button type="button" (click)="comprobarAcceso()">Encender Cámara</button>
+    <button (click)="pararEscaner()">Analizar</button>
+  </div>
+
+  @if (productoEncontrado && !mostrarFormulario) {
+  <div class="info">
+    <h3>{{ productoEncontrado.esApto ? 'PRODUCTO APTO' : 'NO APTO' }}</h3>
+
+    <div>
+      <p>
+        <strong>{{ productoEncontrado.nombre }}</strong> - {{ productoEncontrado.marca }}
+      </p>
+    </div>
+
+    <div class="detalles">
+      <ul>
+        <li>
+          @if (alcoholesEncontrados.length > 0) { Contiene alcoholes secantes: <em>{{  alcoholesEncontrados.join(', ') }}</em> } @else { Sin alcoholes
+          malos. }
+        </li>
+
+        <li>
+          @if (siliconasEncontradas.length > 0) { Contiene siliconas no solubles: <em>{{  siliconasEncontradas.join(', ') }}</em>} @else { Sin
+          siliconas. }
+        </li>
+
+        <li>
+          @if (sulfatosEncontrados.length > 0) { Contiene sulfatos fuertes: <em>{{ sulfatosEncontrados.join(', ') }}</em> } @else { Sin sulfatos
+          agresivos. }
+        </li>
+      </ul>
+      @if(!productoEncontrado.alcohol && !productoEncontrado.silicona &&
+      productoEncontrado.sulfato){
+      <p>
+        <em>{{ productoEncontrado.nombre }}</em> no es apto para uso habitual, pero sí para el ultimo
+        lavado o reseteo mensual.
+      </p>
+      } @if(!productoEncontrado.alcohol && !productoEncontrado.silicona &&
+      !productoEncontrado.sulfato){
+      <p>
+        <em>{{ productoEncontrado.nombre }}</em> es 100% apto para uso habitual.
+      </p>
+      }
+    </div>
+  </div>
+  } @else if (mostrarFormulario) {
+  <div class="formulario">
+    <h3>Registro de producto</h3>
+
+    <p>Introduce los datos del producto para analizarlo.</p>
+    <p>Se enviará a la base de datos y cuando se apruebe, obtendrás la información sobre él.</p>
+
+    <div class="campo">
+      <label>Código de Barras:</label>
+      <input type="text" [(ngModel)]="codigoEscaneado" name="codigoBarras" readonly />
+    </div>
+
+    <div class="campo">
+      <label>Nombre del Producto:</label>
+      <input type="text" [(ngModel)]="nombreNuevo" placeholder="Mascarilla Hidratante" required />
+    </div>
+
+    <div class="campo">
+      <label>Marca:</label>
+      <input type="text" [(ngModel)]="marcaNueva" placeholder="Herbal" required/>
+    </div>
+
+    <div class="campo">
+      <label>Ingredientes:</label>
+      <input type="file" (change)="procesarFotoIngredientes($event)" accept="image/*" />
+
+      <textarea
+        [(ngModel)]="ingredientesExtraidos"
+        rows="6"
+        placeholder="Los ingredientes son..." required
+      ></textarea>
+    </div>
+
+    <div class="botones">
+      <button (click)="guardarNuevoProducto()">Guardar</button>
+    </div>
+  </div>
+  
+  }
+</div>

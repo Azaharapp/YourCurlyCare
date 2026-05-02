@@ -1,0 +1,20 @@
+<div class="container">
+      @if (paso === 1) {
+        <h3>Recuperar cuenta</h3>
+        <p>Introduce tu email y te enviaremos un código.</p>
+        
+        <input type="email" [(ngModel)]="email" placeholder="Tu correo electrónico">
+        <button (click)="solicitarCodigo()">Enviar código</button>
+      } 
+      @else if (paso === 2) {
+        <h3>Nueva contraseña</h3>
+        <p>Introduce el código enviado a <b>{{email}}</b></p>
+        
+        <input type="text" [(ngModel)]="codigo" placeholder="Código de 6 dígitos">
+        <input type="password" [(ngModel)]="nuevaPass" placeholder="Nueva contraseña">
+        <input type="password" [(ngModel)]="confirmarPass" placeholder="Repite la contraseña">
+        
+        <button (click)="cambiarPassword()" >Cambiar contraseña</button>
+        <button (click)="paso = 1">Volver atrás</button>
+      }
+  </div>

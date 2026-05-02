@@ -1,0 +1,139 @@
+<div class="container">
+  <section class="hero">
+    <img src="/img/heroCuidados.png" alt="hero de la página de cuidados del pelo" />
+    <h1 class="textoHero">Cuidados</h1>
+  </section>
+
+  <section class="sec1">
+    <h2>El último lavado</h2>
+    <p>
+      Antes de empezar a cuidar el rizo, hay que resetearlo. La mayoría de productos contienen
+      siliconas no solubles en agua. Estas siliconas recubren la hebra capilar para que brille y
+      parezca sana, pero en realidad están asfixiando el pelo e impidiendo la hidratación.
+    </p>
+    <p>
+      El primer paso para iniciar en el método curly es “El último lavado”, se llama así porque es
+      el lavado que se hace para empezar el nuevo proceso para una hidratación y definición de tu
+      cabello. Para ello, necesitas un champú con sulfatos, para eliminar toda la suciedad y
+      plásticos, pero sin siliconas, para no volver a depositar productos nocivos sobre el pelo.
+    </p>
+    <p>
+      Este lavado es la fase de inicio del método, que además puedes realizar una vez cada mes o
+      después usar un producto prohibido para una profunda limpieza.
+    </p>
+    <button routerLink="/escaner">Escanear producto</button>
+  </section>
+
+    <hr/>
+
+  <section class="sec2">
+    <div class="textoIzquierda">
+      <h2>La limpieza habitual</h2>
+      <p>Una vez hecho el último lavado, los sulfatos fuertes quedan prohibidos.</p>
+      <p>
+        Por lo general, el pelo rizado suele ser seco. Si usamos detergentes fuertes a diario,
+        resecamos más el rizo y provocamos frizz.
+      </p>
+      <p>
+        La técnica adecuada para aplicar el producto es frotando con las yemas de los dedos en el
+        cuero cabelludo. El resto del pelo se limpia con la espuma que cae al aclarar. Frotar las
+        puntas crea enredos innecesarios.
+      </p>
+
+      <div class="lavado">
+        <p class="titulo" (click)="desplegarFormas()"><strong><u>Formas de lavado</u></strong> 
+            <span>{{ mostrarFormas ? ' ↑' : ' ↓'}}</span>
+
+            @if (mostrarFormas) {
+                <div class="contenidoFormas">
+                  <ul>
+                    <li><strong>Low-Poo:</strong> Champús con limpiadores muy suaves. Limpian el cuero cabelludo sin retirar los aceites naturales necesarios. </li>
+                    <li><strong>Coo-Wash:</strong> Para cabellos extremadamentes secos. Se usa un acondicionador con agentes limpiadores botánicos en lugar de champú. </li>
+                  </ul>
+                </div>
+              }
+        </p>
+      </div>
+    </div>
+
+    <div class="imgDerecha">
+      <img src="/img/LowPoo.jpg" />
+    </div>
+  </section>
+
+  <hr/>
+
+  <section class="sec3">
+    <div class="imgIzquierda">
+        <img src="/img/acondicionador.png" alt="aplicacion de acondicionador con las manos rezando">
+    </div>
+    
+    <div class="textoDerecha">
+        <h2>Hidratación y desenredado</h2>
+        <p>Una vez enjuagado el champú, coges una cantidad generosa de acondicionador o mascarilla (una vez por semana, para hidratar).</p>
+        <p>Frotas el acondicionador entre tus palmas, coges una sección de cabello, colocas una mano plana por debajo y otra plana por encima. Deslizas las manos juntas desde la raíz hasta las puntas.</p>
+        <p>Ahora, que ya tenemos el acondicionador, empezamos a desenredar, deshaciendo los nudos de abajo y vas subiendo poco a poco hacia la raíz.</p>
+        <p>A continuación para dar forma a tu rizo, colocas las palmas de las manos hacia arriba, y recoges las puntas del cabello en dirección a la raíz, apretando los mechones contra la cuero cabelludo. Esto se llama scrunch y debe realizarse repetidamente hasta que el cabello tome su forma rizada.</p>
+    </div>
+  </section>
+
+  <hr/>
+
+  <section class="sec4">
+    <div class="textoIzquierda">
+        <h2>La definición</h2>
+        <p>Justo después de dejar reposar el acondicionador unos minutos, lo enjuagamos por completo. Es en este momento, con el pelo aún empapado, cuando comienza la definición. Hacerlo con el cabello tan mojado es el gran secreto para evitar el encrespamiento desde el minuto cero.</p>
+        <p>Primero, solemos aplicar un Leave-in (un acondicionador sin aclarado) que actuará como nuestra base hidratante y protectora. A continuación, llega el turno de la fijación, para la cual utilizaremos gel o espuma, dependiendo del peso que soporte nuestro tipo de rizo.</p>
+        
+        <p class="titulo" (click)="desplegarTecnicaMR()">La forma correcta de aplicar estos productos es mediante la técnica de <u>"manos rezando"</u>:
+          <span>{{ mostrarTecnicaMR ? ' ↑' : ' ↓'}}</span>
+
+            @if (mostrarTecnicaMR) {
+                <div class="contenidoTecnicaMR">
+                  <p>Colocamos el mechón entre las dos palmas estiradas y deslizamos hacia abajo para distribuir el producto uniformemente sin romper la agrupación natural del rizo.</p>
+                </div>
+              }
+        </p>
+
+        <p class="titulo" (click)="desplegarTecnicaScrunch()">Después, pasamos a la técnica estrella, el <u>scrunch</u>:
+          <span>{{ mostrarTecnicaScrunch ? ' ↑' : ' ↓'}}</span>
+
+            @if (mostrarTecnicaScrunch) {
+                <div class="contenidoTecnicaScrunch">
+                  <p>Consiste en recoger el cabello desde las puntas hacia la raíz con las manos y apretar suavemente, bombeando el rizo para encogerlo y marcar su forma natural.</p>
+                </div>
+              }
+        </p>
+    </div>
+
+    <div class="imgDerecha">
+        <img src="/img/scrunch.jpg" alt="chica haciendo scrunch en el pelo">
+    </div>
+  </section>
+
+  <hr/>
+
+  <section class="sec5">
+    <div class="imgIzquierda">
+        <img src="/img/difusor.jpg" alt="secado de pelo con difusor"/>
+    </div>
+
+    <div class="textoDerecha">
+        <h2>El secado</h2>
+        <p>Una vez terminada la definición, necesitamos retirar el exceso de agua y producto. Para ello, usamos una toalla de microfibra o una camiseta vieja de algodón puro. Hacemos lo que se conoce como micro-plopping: apretamos suavemente el pelo hacia la cabeza con la toalla para absorber el agua sobrante, siempre a toques y sin frotar jamás.</p>
+        <p>Con el exceso de humedad retirado, podemos dejar que el pelo se seque al aire libre o, si buscamos más volumen y encogimiento, usar el difusor a una temperatura media o baja, y con velocidad suave. </p>
+        <p class="titulo" (click)="desplegarFases()">Si usamos difusor, la técnica ideal <u>tiene dos fases:</u>
+          <span>{{ mostrarFases ? ' ↑' : ' ↓'}}</span>
+
+            @if (mostrarFases) {
+                <div class="contenidoFases">
+                  <ul>
+                    <li><strong>Secado de raíz (Hover diffusing):</strong> Acercamos el difusor a las raíces moviéndolo alrededor de la cabeza, pero sin llegar a tocar el pelo. Esto sella la capa externa de los productos, secando el gel y creando una costra protectora.</li>
+                    <li><strong>Secado de puntas (Pixie diffusing):</strong> Una vez que la raíz está seca y el producto ha empezado a endurecerse, recogemos los rizos en la copa del difusor apagado, lo pegamos al cuero cabelludo, lo encendemos y lo mantenemos completamente quieto durante unos segundos. Apagamos antes de soltar y repetimos por toda la cabeza.</li>
+                  </ul>
+                </div>
+            }
+        </p>
+    </div>
+  </section>
+</div>

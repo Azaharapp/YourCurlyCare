@@ -1,0 +1,252 @@
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using YourCurlyCareApi.Models;
+using YourCurlyCareApi.Data;
+
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using System.Net.Mail;
+using System.Net;
+using System.Text.Json;
+
+namespace YourCurlyCareApi.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class UsuariosController : ControllerBase            //clase heredada de ControllerBase
+{
+    private readonly YourCurlyCareContext _context;         //atributo privado de solo lectura de tipo YourCurlyCareContext
+    private readonly IConfiguration _config;
+
+    //constructor
+    public UsuariosController(YourCurlyCareContext context, IConfiguration config)
+    {
+        _context = context;
+        _config = config;
+    }
+
+    [HttpGet]                                               //permite usar el metodo get  --> lee
+    //metodo asincrono(async) que devuelve una promesa(Task):
+    //ActionResult: devuelve codigos de estado HTTP 
+    //IEnumerable: permite devolver una lista
+    public async Task<ActionResult<IEnumerable<Usuario>>> GetUsuarios()
+    {
+        return await _context.Usuarios.ToListAsync();       //devuelve todos los usuarios en una lista asincrona(await)
+    }
+
+    [HttpGet("{id}")]                                       // buscar usuario por Id
+    public async Task<ActionResult<Usuario>> GetUsuario(int id)
+    {
+        var usuario = await _context.Usuarios.FindAsync(id);
+
+        if (usuario == null) return NotFound();
+
+        return usuario;
+    }
+
+    [HttpPost]                                                  //registrar un nuevo uuario --> metodo post
+    public async Task<ActionResult<Usuario>> RegistrarUsuario(Usuario usuario)
+    {
+        //variable almacena booleano si el email existe o no 
+        var emailExiste = await _context.Usuarios.AnyAsync(u => u.Email == usuario.Email);
+
+        if (emailExiste) return BadRequest("Este email ya está registrado.");
+
+        //encripta contraseña de usuario
+        usuario.Password = BCrypt.Net.BCrypt.HashPassword(usuario.Password);
+        usuario.FechaRegistro = DateTime.Now;
+        usuario.EmailConfirmado = false;
+        usuario.CodigoVerificacion = new Random().Next(100000, 999999).ToString();
+
+        _context.Usuarios.Add(usuario);
+        await _context.SaveChangesAsync();
+
+        EnviarEmailConfirmacion(usuario.Email, usuario.CodigoVerificacion);
+
+        return Ok(new { requiereConfirmacion = true });
+    }
+
+    [HttpPost("login")]
+    public async Task<ActionResult> Login(LoginRequest request)
+    {
+        //buscar al usuario por su email
+        var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == request.Email);
+        if (usuario == null) return BadRequest("Credenciales incorrectas. Parece que el email no es correcto.");
+
+        if (!usuario.EmailConfirmado) return BadRequest("Debes confirmar tu email antes de iniciar sesión.");
+
+        bool passwordValida = BCrypt.Net.BCrypt.Verify(request.Password, usuario.Password);
+        if (!passwordValida) return BadRequest("Credenciales incorrectas. Parece que la contraseña no es correcta");
+
+        var cookieOptions = new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,
+            //SameSite = SameSiteMode.Strict
+            SameSite = SameSiteMode.None,
+            Path = "/"
+        };
+
+        // si se marca recordar, la sesion dura 7 dias, si se marca la sision muere al cerrar el navegador
+        if (request.Recordar) cookieOptions.Expires = DateTime.Now.AddDays(7);
+
+        Response.Cookies.Append("usuario_actividad", usuario.Id.ToString(), cookieOptions);
+
+        string tokenFinal = GenerarTokenJwt(usuario);
+
+        return Ok(new
+        {
+            token = tokenFinal,
+            username = usuario.Username,
+            userId = usuario.Id
+        });
+    }
+
+    private string GenerarTokenJwt(Usuario usuario)
+    {
+        SymmetricSecurityKey claveSegura = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+        SigningCredentials credenciales = new SigningCredentials(claveSegura, SecurityAlgorithms.HmacSha256);
+
+        Claim[] datosUsuario = new Claim[]                  //datos que iran dentro del token
+        {
+            new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()),
+            new Claim(ClaimTypes.Email, usuario.Email),
+            new Claim(ClaimTypes.Name, usuario.Nombre)
+        };
+
+        //estructura del token
+        JwtSecurityToken tokenJwt = new JwtSecurityToken(
+            issuer: _config["Jwt:Issuer"],
+            audience: _config["Jwt:Audience"],
+            claims: datosUsuario,
+            expires: DateTime.Now.AddHours(3),
+            signingCredentials: credenciales);
+
+        return new JwtSecurityTokenHandler().WriteToken(tokenJwt);
+    }
+
+    [HttpPost("confirmar")]
+    public async Task<IActionResult> ConfirmarEmail([FromBody] ConfirmarRequest request)
+    {
+        try
+        {
+            if (request == null || string.IsNullOrEmpty(request.Codigo))
+                return BadRequest("El código es obligatorio.");
+
+            var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.CodigoVerificacion == request.Codigo.Trim());
+
+            if (usuario == null) return BadRequest("El código es incorrecto.");
+
+            usuario.EmailConfirmado = true;
+            usuario.CodigoVerificacion = null;
+
+            _context.Entry(usuario).Property(u => u.EmailConfirmado).IsModified = true;
+            _context.Entry(usuario).Property(u => u.CodigoVerificacion).IsModified = true;
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new { mensaje = "Ya puedes iniciar sesión" });
+        }
+        catch (Exception e)
+        {
+            var errorReal = e.InnerException != null ? e.InnerException.Message : e.Message;
+
+            return StatusCode(500, new { error = "Error de base de datos", detalle = errorReal });
+        }
+    }
+
+    private void EnviarEmailConfirmacion(string emailDestino, string codigo)
+    {
+        var emailEmisor = _config["EmailSettings:User"];
+        var passwordEmisor = _config["EmailSettings:Pass"];
+
+        var smtpClient = new SmtpClient("smtp.gmail.com")
+        {
+            Port = 587,
+            Credentials = new NetworkCredential(emailEmisor, passwordEmisor),
+            EnableSsl = true,
+        };
+
+        var mensaje = new MailMessage
+        {
+            From = new MailAddress(emailEmisor, "YourCurlyCare"),
+            Subject = "Confirma tu cuenta de YourCurlyCare",
+            Body = $@"
+            <html>
+                <body>
+                    <h2>¡Bienvenida a YourCurlyCare!</h2>
+                    <p>Para activar tu cuenta, introduce el siguiente código en el apartado de validación de la web:</p>
+                    <h1 style='color: #d8a481;'>{codigo}</h1>
+                    <p>Si no te has registrado, puedes ignorar este correo.</p>
+                </body>
+            </html>",
+            IsBodyHtml = true,
+        };
+
+        mensaje.To.Add(emailDestino);
+        smtpClient.Send(mensaje);
+    }
+
+    [HttpPost("olvidar-pass")]
+    public async Task<IActionResult> OlvidePassword([FromBody] OlvideRequest request)
+    {
+        var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == request.Email);
+        if (usuario == null) return Ok(new { mensaje = "Comprueba tu email" });
+
+        usuario.CodigoVerificacion = new Random().Next(100000, 999999).ToString();
+        await _context.SaveChangesAsync();
+
+        EnviarEmailRecuperacion(usuario.Email, usuario.CodigoVerificacion);
+        return Ok(new { mensaje = "Código de recuperación enviado." });
+    }
+
+    [HttpPost("reset-pass")]
+    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
+    {
+        var usuario = await _context.Usuarios
+            .FirstOrDefaultAsync(u => u.Email == request.Email && u.CodigoVerificacion == request.Codigo);
+
+        if (usuario == null) return BadRequest("Código o email incorrectos.");
+
+        usuario.Password = BCrypt.Net.BCrypt.HashPassword(request.NuevaPassword);
+        usuario.CodigoVerificacion = null;
+
+        await _context.SaveChangesAsync();
+        return Ok(new { mensaje = "Contraseña actualizada con éxito." });
+    }
+
+
+    private void EnviarEmailRecuperacion(string emailDestino, string codigo)
+    {
+        var emailEmisor = _config["EmailSettings:User"];
+        var passwordEmisor = _config["EmailSettings:Pass"];
+
+        var smtpClient = new SmtpClient("smtp.gmail.com")
+        {
+            Port = 587,
+            Credentials = new NetworkCredential(emailEmisor, passwordEmisor),
+            EnableSsl = true,
+        };
+
+        var mensaje = new MailMessage
+        {
+            From = new MailAddress(emailEmisor, "YourCurlyCare"),
+            Subject = "Recupera tu contraseña de YourCurlyCare",
+            Body = $@"
+            <html>
+                <body>
+                    <h2>Restablecer contraseña</h2>
+                    <p>Has solicitado cambiar tu contraseña. Introduce el siguiente código en el apartado de validación de la web:</p>
+                    <h1 style='color: #d8a481;'>{codigo}</h1>
+                    <p>Si no has sido tú, ignora este mensaje.</p>
+                </body>
+            </html>",
+            IsBodyHtml = true,
+        };
+
+        mensaje.To.Add(emailDestino);
+        smtpClient.Send(mensaje);
+    }
+}

@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  basededatos:
+    image: mariadb:latest
+    container_name: mariadb-ycc
+    environment:
+      - MARIADB_ROOT_PASSWORD=root
+      - MARIADB_DATABASE=yourCurlyCare_db
+      - MARIADB_USER=user1
+      - MARIADB_PASSWORD=123456
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql               
+
+  phpmyadmin:                                #configuracion para que permita acceder a phpMyAdmin de XAMPP
+    image: phpmyadmin:latest
+    container_name: phpmyadmin-daw
+    ports:
+      - "8080:80"
+    environment:
+      - PMA_HOST=basededatos
+      - PMA_USER=root
+      - PMA_PASSWORD=root
+    depends_on:
+      - basededatos
+  
+  backend:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: backend-api
+    ports:
+      - "8000:8080" 
+    depends_on:
+      - basededatos
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=basededatos;Database=yourCurlyCare_db;Uid=root;Pwd=root;
+
+  frontend:
+    build: 
+      context: ./frontend      
+    container_name: frontend-angular
+    ports:
+      - "4200:80"              
+    depends_on:
+      - backend
+
+volumes:
+  db_data:                                

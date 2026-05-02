@@ -1,0 +1,60 @@
+@import url('https://fonts.googleapis.com/css2?family=Akaya+Kanadaka&family=Alegreya:ital,wght@0,400..900;1,400..900&display=swap');
+
+* {
+  font-family: 'Alegreya';
+}
+
+footer{
+  background-color: #d0b49f;
+  padding: 30px;
+  text-align: center;
+
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+}
+
+.redesSociales {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  padding: 20px;
+  place-items: center;
+}
+
+.redesSociales a img:hover{
+  transform: scale(1.2);
+}
+
+p a:hover{
+  font-weight: bold;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+}
+
+/*----Responsive----*/
+@media (max-width: 800px) {
+  .footer {
+    padding: 25px 15px;
+  }
+
+  .redesSociales {
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    padding: 15px;
+  }
+}
+
+@media (max-width: 400px) {
+  .footer {
+    padding: 20px 10px;
+  }
+  
+  .redesSociales {
+    grid-template-columns: 1fr 1fr;
+    gap: 5px;
+    padding: 10px;
+  }
+}

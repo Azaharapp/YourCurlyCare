@@ -1,0 +1,64 @@
+<div class="container">
+  <div class="titulo">
+    <img
+      width="48"
+      height="48"
+      src="https://img.icons8.com/parakeet-line/48/flower.png"
+      alt="flower"
+    />
+    <h2>Test Curly</h2>
+    <img
+      width="48"
+      height="48"
+      src="https://img.icons8.com/parakeet-line/48/flower.png"
+      alt="flower"
+    />
+  </div>
+
+  <div class="test">
+    @if (!testFinalizado()) { @if (preguntas().length > 0) {
+    <div class="cuestionario">
+      <h3>Pregunta {{ indicePregunta() + 1 }} de {{ preguntas().length }}</h3>
+      <p class="enunciado">{{ preguntas()[indicePregunta()].enunciado }}</p>
+
+      <div class="opciones">
+        <label class="opcion">
+          <input type="radio" name="respuesta" value="a" #radioA (change)="seleccionada = 'a'" />
+          <span class="texto">{{ preguntas()[indicePregunta()].opcionA }}</span>
+        </label>
+
+        <label class="opcion">
+          <input type="radio" name="respuesta" value="b" #radioB (change)="seleccionada = 'b'" />
+          <span class="texto">{{ preguntas()[indicePregunta()].opcionB }}</span>
+        </label>
+
+        <label class="opcion">
+          <input type="radio" name="respuesta" value="c" #radioC (change)="seleccionada = 'c'" />
+          <span class="texto">{{ preguntas()[indicePregunta()].opcionC }}</span>
+        </label>
+      </div>
+
+      <button [disabled]="!seleccionada" (click)="siguientePregunta()">
+        {{ indicePregunta() === preguntas().length - 1 ? 'Finalizar' : 'Siguiente' }}
+      </button>
+    </div>
+    } @else {
+    <p>Cargando preguntas del test...</p>
+    } } @else {
+    <div class="resultado">
+      <h2>¡Test completado!</h2>
+
+      @if (resultadoInfo()) {
+      <div class="recomendacion">
+        <h3 class="tipo">{{ resultadoInfo()?.titulo }}</h3>
+        <p class="instrucciones">{{ resultadoInfo()?.descripcion }}</p>
+      </div>
+      } @else {
+      <p>Calculando tu mejor rutina...</p>
+      }
+
+      <button routerLink="/inicio">Ir al inicio</button>
+    </div>
+    }
+  </div>
+</div>

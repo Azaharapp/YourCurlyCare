@@ -1,0 +1,117 @@
+@import url('https://fonts.googleapis.com/css2?family=Akaya+Kanadaka&family=Alegreya:ital,wght@0,400..900;1,400..900&display=swap');
+
+* {
+  font-family: 'Alegreya';
+}
+
+h2 {
+  font-family: 'Akaya Kanadaka';
+  font-size: 35px;
+  text-align: center;
+}
+
+.titulo {
+  text-align: center;
+}
+
+.titulo img,
+.titulo h2 {
+  display: inline-block;
+  vertical-align: middle;
+  margin:10px;
+  margin-top: 50px;
+}
+
+h3{
+  font-family: 'Akaya Kanadaka';
+  color: #ac7f5e;
+}
+
+.enunciado{
+  font-weight: bold;
+  text-align: center;
+  font-size: 25px;
+}
+
+.test{
+  max-width: 800px;
+  margin: 60px auto;
+  padding: 30px;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 5px gray;
+  box-sizing: border-box;
+}
+
+button{
+  padding: 8px 25px;
+  margin: 15px;
+  color: white;
+  background-color: #d0b49f;
+  border: 1px solid #ac7f5e;
+  border-radius: 8px;
+  box-shadow: 2px 2px 2px gray;
+
+  display: block;
+  margin-left: auto;
+}
+
+button:hover {
+  color: black;
+  transform: scale(1.05);
+}
+
+.opciones{
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin: 25px 0;
+  text-align: left;
+}
+
+.instrucciones {
+  white-space: pre-line; 
+  margin-bottom: 15px;
+
+}
+
+@media (max-width: 800px) {
+
+  .titulo{
+    max-width: 800px;
+    margin:0;
+  }
+
+  .titulo img, .titulo h2{
+  margin: 40px 4px;
+  }
+
+  .titulo img{
+    width: 25px;
+    height: auto;
+  }
+
+  .test{
+    max-width: 550px;
+  }
+}
+
+@media (max-width: 400px) {
+    .titulo{
+      max-width: 400px;
+    }
+  
+    .titulo img{
+      width: 23px;
+      height: auto;
+    }
+
+    .test{
+      max-width: 300px;
+    }
+
+    .enunciado{
+      font-size: 18px;
+    }
+  }
+

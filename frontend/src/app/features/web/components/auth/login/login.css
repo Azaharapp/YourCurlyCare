@@ -1,0 +1,119 @@
+@import url('https://fonts.googleapis.com/css2?family=Akaya+Kanadaka&family=Alegreya:ital,wght@0,400..900;1,400..900&display=swap');
+
+* {
+  font-family: 'Alegreya';
+}
+
+.container {
+  max-width: 400px;
+  margin: 60px auto;
+  padding: 40px;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 5px gray;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+h2 {
+  color: #ac7f5e;
+  margin-bottom: 15px;
+  font-size: 24px;
+}
+
+.campos {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+label {
+  font-size: 16px;
+  color: black;
+  margin-bottom: 3px;
+}
+
+input {
+  padding: 6px 8px;
+  border: 1px solid #d0b49f;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: border-color 0.3s ease;
+  font-family: inherit;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+button {
+  padding: 8px 25px;
+  color: white;
+  background-color: #d0b49f;
+  border: 1px solid #ac7f5e;
+  border-radius: 8px;
+  box-shadow: 2px 2px 2px gray;
+}
+
+button:hover {
+  color: black;
+  transform: scale(1.05);
+}
+
+a {
+  color: gray;
+  text-decoration: none;
+}
+
+a:hover {
+  font-weight: bold;
+}
+
+.recordar {
+  display: flex;
+  gap: 10px; 
+  justify-content: center;
+  margin-top: 20px;
+  cursor: pointer;
+}
+
+input[type='checkbox'] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #ac7f5e;
+}
+
+label[for='recordar'] {
+  font-size: 14px;
+  color: black;
+  cursor: pointer;
+}
+
+/*----Responsive----*/
+@media (max-width: 800px) {
+  .container {
+    width: 90%;
+    margin: 30px auto;
+    box-sizing: border-box;
+    padding: 25px 20px;
+  }
+
+  h2 {
+    font-size: 20px;
+  }
+
+  label {
+    font-size: 12px;
+  }
+
+  input {
+    font-size: 10px;
+    padding: 3px 4px;
+  }
+}
+
+@media (max-width: 400px) {
+  .container {
+    max-width: 350px;
+  }
+}

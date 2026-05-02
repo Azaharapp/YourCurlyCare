@@ -1,0 +1,189 @@
+@import url('https://fonts.googleapis.com/css2?family=Akaya+Kanadaka&family=Alegreya:ital,wght@0,400..900;1,400..900&display=swap');
+
+.header {
+  display: flex;
+  flex-wrap: wrap; 
+  justify-content: space-between; 
+  align-items: center;
+  padding: 15px 35px;
+  background-color: #fefefe;
+  font-family: 'Alegreya';
+}
+
+.logo {
+  order: 1;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+} 
+
+.icons {
+  order: 2;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+nav {
+ order: 3;
+ width: 100%;
+}
+
+.icons img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.icons img:hover {
+  transform: scale(1.1);
+}
+
+.nav {
+  display: flex;
+  justify-content: center; 
+  list-style: none;
+  gap: 30px;
+  margin: 0; 
+  padding: 0;
+}
+
+.nav a {
+  text-decoration: none;
+  color: black;
+  transition: color 0.3s;
+}
+
+.nav a:hover {
+  color: #d0b49f;
+}
+
+.barra {
+  color: #ac7f5e;
+}
+
+.containerSearch {
+  display: flex;
+  align-items: center;
+  background-color: #d0b49f;
+  border-radius: 25px;
+  padding: 5px 15px;
+  gap: 10px;
+
+  position: relative;
+}
+
+.sugerencias {
+  position: absolute;
+  top: 100%; 
+  left: 0;
+  width: 100%; 
+  background-color: #d0b49f; 
+  border-radius: 8px;
+  border: 1px solid #ac7f5e; 
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5); 
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 0 0; 
+  overflow: hidden;
+  z-index: 20; 
+}
+
+.sugerencias li {
+  padding: 12px 20px;
+  margin: 0;
+  color: black;
+  font-size: 14px;
+  cursor: pointer;
+  border-bottom: 1px solid #ac7f5e; 
+  display: flex;
+}
+
+.containerSearch input {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 14px;
+  font-family: 'Alegreya';
+  width: 150px;
+}
+
+.containerPerfil {
+  position: relative;
+  cursor: pointer;
+}
+
+.opcionesPerfil {
+  position: absolute;
+  top: 40px;
+  right: 0;
+  background-color: #d0b49f;
+  border-radius: 8px;
+  border: 1px solid #ac7f5e;
+  box-shadow: 0px 2px 4px black;
+  display: flex;
+  flex-direction: column;
+  min-width: 150px;
+  overflow: hidden;
+  z-index: 10;
+}
+
+.opcionesPerfil a, .opcionesPerfil p {
+  padding: 12px 20px;
+  margin: 0;
+  text-decoration: none;
+  color: black;
+  font-size: 14px;
+  border-bottom: 1px solid #eee;
+}
+
+.opcionesPerfil a:hover {
+  color: white;
+}
+
+h2 {
+  font-family: 'Akaya Kanadaka';
+  font-size: 20px;
+  color: black;
+}
+
+
+/*----Responsive----*/
+
+@media (max-width: 800px) {
+  
+  .header {
+    padding: 10px;
+  }
+
+  .nav {
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .containerSearch input {
+    width: 100px;
+  }
+}
+
+@media (max-width: 400px) {
+  .header {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .containerSearch {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .containerSearch input {
+    width: 100%;
+  }
+  
+  .opcionesPerfil {
+    right: -20px; 
+  }
+}
