@@ -36,7 +36,7 @@ public class ProductoEscanersController : ControllerBase
     {
         var producto = await _context.ProductoEscaners.FirstOrDefaultAsync(p => p.CodigoBarras == codigo);
 
-        if (producto == null) return NotFound();
+        if (producto == null) return NotFound(null);
 
         return Ok(producto);
     }
@@ -57,7 +57,8 @@ public class ProductoEscanersController : ControllerBase
                 Alcohol = datos.Alcohol,
                 Silicona = datos.Silicona,
                 Sulfato = datos.Sulfato,
-                EsApto = datos.EsApto
+                EsApto = datos.EsApto,
+                IdUsuario = datos.UsuarioId
             };
 
             _context.ProductoEscaners.Add(producto);
@@ -76,6 +77,7 @@ public class ProductoEscanersController : ControllerBase
         await _context.SaveChangesAsync();
 
         return Ok(producto);
+
     }
 
     [HttpGet("buscar")]
@@ -95,23 +97,26 @@ public class ProductoEscanersController : ControllerBase
     public async Task<ActionResult> GetProductosAdmin()
     {
         var lista = await _context.ProductoEscaners
-            .Join(_context.RegistroEscaners,
+            .GroupJoin(_context.RegistroEscaners,                       //GroupJoin es como left join en SQL
                   p => p.Id,
                   r => r.IdProductoE,
-                  (p, r) => new ProductosAdmin
-                  {
-                      Id = p.Id,
-                      CodigoBarras = p.CodigoBarras,
-                      Nombre = p.Nombre,
-                      Marca = p.Marca,
-                      Ingredientes = p.Ingredientes,
-                      Silicona = p.Silicona,
-                      Alcohol = p.Alcohol,
-                      Sulfato = p.Sulfato,
-                      EsApto = p.EsApto,
-                      IdUsuario = r.IdUsuario,
-                      FechaRegistro = r.FechaEscaner
-                  }).ToListAsync();
+                  (p, registros) => new { p, registros })
+            .SelectMany(
+                temp => temp.registros.DefaultIfEmpty(),                //si no hay registros rellena con null
+                (temp, r) => new ProductosAdmin
+                {
+                    Id = temp.p.Id,
+                    CodigoBarras = temp.p.CodigoBarras,
+                    Nombre = temp.p.Nombre,
+                    Marca = temp.p.Marca,
+                    Ingredientes = temp.p.Ingredientes,
+                    Silicona = temp.p.Silicona,
+                    Alcohol = temp.p.Alcohol,
+                    Sulfato = temp.p.Sulfato,
+                    EsApto = temp.p.EsApto,
+                    IdUsuario = temp.p.IdUsuario,
+                    FechaRegistro = r != null ? r.FechaEscaner : DateTime.MinValue
+                }).ToListAsync();
 
         return Ok(lista);
     }
@@ -150,7 +155,7 @@ public class ProductoEscanersController : ControllerBase
         var producto = await _context.ProductoEscaners.FindAsync(id);
         if (producto == null) return NotFound();
 
-        _context.ProductoEscaners.Remove(producto); 
+        _context.ProductoEscaners.Remove(producto);
         await _context.SaveChangesAsync();
         return Ok();
     }

@@ -31,4 +31,6 @@ public class DatosEscaneo
 
     [JsonPropertyName("esApto")]
     public bool EsApto { get; set; }
+
+    
 }

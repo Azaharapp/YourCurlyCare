@@ -16,7 +16,7 @@ export class Productos {
   public esAdmin: boolean = localStorage.getItem('rol') === 'Admin';
   
   private url = 'http://localhost:8000/api/ProductoEscaners/admin';
- // private url = 'http://127.0.0.1:5216/api/ProductoEscaners/admin';
+  //private url = 'http://127.0.0.1:5216/api/ProductoEscaners/admin';
 
   public productos: any[] = [];
   public productoEditando: any = null;

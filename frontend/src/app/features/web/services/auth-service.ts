@@ -14,8 +14,8 @@ export class AuthService {
   private apiUrl: string = "http://localhost:8000/api/usuarios";            
   //private apiUrl: string = "http://127.0.0.1:5216/api/usuarios"
 
-  public usuarioActual = signal<string | null>(localStorage.getItem('usuarioNombre') || sessionStorage.getItem('usuarioNombre'));
-  public userRol = signal<string | null>(localStorage.getItem('rol') || sessionStorage.getItem('rol'));
+  public usuarioActual = signal<string | null>(localStorage.getItem('usuarioNombre') || sessionStorage.getItem('usuarioNombre')); public userRol = signal<string | null>(localStorage.getItem('rol') || sessionStorage.getItem('rol'));
+  public userId = signal<string | null>(localStorage.getItem('usuarioId') || sessionStorage.getItem('usuarioId'));
 
   guardarSesion(res: any, recordar: boolean): void {
     const storage = recordar ? localStorage : sessionStorage;
@@ -30,16 +30,13 @@ export class AuthService {
 
     this.usuarioActual.set(res.username);
     this.userRol.set(res.rol);
+    this.userId.set(res.userId.toString());
   }
 
   cerrarSesion(): void {
     this.usuarioActual.set(null);
     this.userRol.set(null);
-
-    localStorage.removeItem('usuarioNombre');
-    localStorage.removeItem('token');
-    localStorage.removeItem('usuarioId');
-    localStorage.removeItem('rol');
+    this.userId.set(null);
 
     localStorage.clear();
     sessionStorage.clear();
@@ -48,7 +45,7 @@ export class AuthService {
   }
 
   isAdmin(): boolean {
-    return this.userRol() === 'Admin';
+    return this.userRol()?.toLowerCase() === 'admin';
   }
 
   isLogguedIn(): boolean {

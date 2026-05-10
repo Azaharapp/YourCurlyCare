@@ -8,4 +8,6 @@ export interface ProductoEscanerI {
     silicona: boolean;
     sulfato: boolean;
     esApto: boolean;
+    idUsuario: number;
+    fechaRegistro: Date;
 }

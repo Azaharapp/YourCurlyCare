@@ -1,4 +1,4 @@
-import { Component, inject, output } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, output } from '@angular/core';
 import Quagga from '@ericblade/quagga2';
 import Tesseract from 'tesseract.js';
 import { ProductosService } from '../../services/productos-service';
@@ -20,7 +20,8 @@ export class Escaner {
   private productosService: ProductosService = inject(ProductosService);
   public authService: AuthService = inject(AuthService);
   private router = inject(Router);
-
+  private cd = inject(ChangeDetectorRef);
+  
   public mostrarFormulario: boolean = false;
   public cargando: boolean = false;
 
@@ -94,7 +95,7 @@ export class Escaner {
           this.pararEscaner();
         },
         error: () => {
-          console.log("Aún no ha sido registrado en la base de datos...");
+          //console.log("Aún no ha sido registrado en la base de datos...");
           this.productoEncontrado = null;
           this.mostrarFormulario = true;
           this.pararEscaner();
@@ -135,7 +136,10 @@ export class Escaner {
     this.siliconasEncontradas = analisis.nombresSiliconas;
     this.sulfatosEncontrados = analisis.nombresSulfatos;
 
-    const idUsuario = parseInt(localStorage.getItem('usuarioId') || '0');
+    const idGuardado = localStorage.getItem('usuarioId') || sessionStorage.getItem('usuarioId');
+    const idUsuario = idGuardado ? parseInt(idGuardado) : 0;
+
+    if (idUsuario === 0) return alert("No se ha podido identificar al usuario")
 
     const paqueteEscaneo = {
       codigoBarras: this.codigoEscaneado,
@@ -148,18 +152,24 @@ export class Escaner {
       esApto: !analisis.tieneAlcohol && !analisis.tieneSilicona && !analisis.tieneSulfatos || analisis.tieneSulfatos,
       usuarioId: idUsuario
     };
-
+    
     this.productosService.registrarProducto(paqueteEscaneo).subscribe({
       next: (res: ProductoEscanerI) => {
         this.cargarDatosProducto(res);
         this.mostrarFormulario = false;
+        this.productoEncontrado = null;
+        
+        alert("Producto analizado y guardado con éxito.");
+        
+        this.cd.detectChanges(); 
       },
-      error: (err) => console.error('Error al conectar con el servidor:', err)
+      error: (err) => console.error("Error al guardar:", err)
     });
+
     this.nombreNuevo = '';
     this.marcaNueva = '';
     this.ingredientesExtraidos = '';
-   }
+  }
 
   //expresiones regulares para evitar confusiones con espacios (\\b) al principio y final de la palabra y comas (,) al final 
   analizarIngredientes(ingredientes: string) {
