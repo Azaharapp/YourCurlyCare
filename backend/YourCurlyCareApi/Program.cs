@@ -6,8 +6,10 @@ var builder = WebApplication.CreateBuilder(args);
 //--
 // se lee la configuracion de appsetting.json
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var serverVersion = new MySqlServerVersion(new Version(8, 0, 30));
+
 builder.Services.AddDbContext<YourCurlyCareContext>(options =>
-    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+    options.UseMySql(connectionString, serverVersion));
 //--
 
 // Add services to the container.

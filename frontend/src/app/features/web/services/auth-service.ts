@@ -15,25 +15,40 @@ export class AuthService {
   //private apiUrl: string = "http://127.0.0.1:5216/api/usuarios"
 
   public usuarioActual = signal<string | null>(localStorage.getItem('usuarioNombre') || sessionStorage.getItem('usuarioNombre'));
+  public userRol = signal<string | null>(localStorage.getItem('rol') || sessionStorage.getItem('rol'));
 
   guardarSesion(res: any, recordar: boolean): void {
     const storage = recordar ? localStorage : sessionStorage;
+    const storage2 = recordar ? sessionStorage : localStorage;
 
-      storage.setItem('token', res.token);
-      storage.setItem('usuarioNombre', res.username);
-      storage.setItem('usuarioId', res.userId.toString());
+    storage2.clear();
 
-      this.usuarioActual.set(res.username);
+    storage.setItem('token', res.token);
+    storage.setItem('usuarioNombre', res.username);
+    storage.setItem('usuarioId', res.userId.toString());
+    storage.setItem('rol', res.rol);
+
+    this.usuarioActual.set(res.username);
+    this.userRol.set(res.rol);
   }
 
   cerrarSesion(): void {
     this.usuarioActual.set(null);
+    this.userRol.set(null);
 
     localStorage.removeItem('usuarioNombre');
     localStorage.removeItem('token');
     localStorage.removeItem('usuarioId');
+    localStorage.removeItem('rol');
+
+    localStorage.clear();
+    sessionStorage.clear();
 
     this.router.navigate(['/login']);
+  }
+
+  isAdmin(): boolean {
+    return this.userRol() === 'Admin';
   }
 
   isLogguedIn(): boolean {

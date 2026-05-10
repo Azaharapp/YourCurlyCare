@@ -25,7 +25,7 @@ export class Login {
 
       this.authService.login(usuarioExistente).subscribe({
         next: (respuesta) => {
-          this.authService.guardarSesion(respuesta, usuarioExistente.recordar);
+          //this.authService.guardarSesion(respuesta, usuarioExistente.recordar);
           this.router.navigate(['/']);
         },
         error: (err) => {

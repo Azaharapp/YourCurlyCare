@@ -7,17 +7,18 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth-service';
 import { Router } from '@angular/router';
+import { Productos } from "../admin/productos/productos";
 
 @Component({
   selector: 'app-escaner',
   imports: [CommonModule,
-    FormsModule,],
+    FormsModule, Productos],
   templateUrl: './escaner.html',
   styleUrl: './escaner.css',
 })
 export class Escaner {
   private productosService: ProductosService = inject(ProductosService);
-  private authService: AuthService = inject(AuthService);
+  public authService: AuthService = inject(AuthService);
   private router = inject(Router);
 
   public mostrarFormulario: boolean = false;
@@ -30,6 +31,7 @@ export class Escaner {
   public codigoTemporal: string = "";
 
   public productoEncontrado: ProductoEscanerI | null = null;
+  public mensajeAviso: string | null = null;
 
   public alcoholesEncontrados: string[] = [];
   public siliconasEncontradas: string[] = [];
@@ -151,15 +153,13 @@ export class Escaner {
       next: (res: ProductoEscanerI) => {
         this.cargarDatosProducto(res);
         this.mostrarFormulario = false;
-        alert("Producto analizado y guardado con éxito.");
       },
-      error: (err) => console.error("Error al guardar:", err)
+      error: (err) => console.error('Error al conectar con el servidor:', err)
     });
-
     this.nombreNuevo = '';
     this.marcaNueva = '';
     this.ingredientesExtraidos = '';
-  }
+   }
 
   //expresiones regulares para evitar confusiones con espacios (\\b) al principio y final de la palabra y comas (,) al final 
   analizarIngredientes(ingredientes: string) {

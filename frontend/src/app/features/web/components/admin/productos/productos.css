@@ -1,0 +1,95 @@
+* {
+  font-family: 'Alegreya';
+}
+
+h2 {
+  font-family: 'Akaya Kanadaka';
+  font-size: 35px;
+  text-align: center;
+  margin: 25px;
+}
+
+table,
+th,
+td {
+  border: 2px solid #ac7f5e;
+}
+
+table {
+  border-collapse: collapse;
+  text-align: center;
+}
+th{
+    background-color: #d0b49f;
+}
+
+th,
+td {
+  padding: 10px;
+}
+
+.tabla {
+  display: flex;
+  justify-content: center;
+  margin: 35px;
+}
+
+button {
+  padding: 4px 8px;
+  color: white;
+  background-color: #d0b49f;
+  border: 1px solid #ac7f5e;
+  border-radius: 8px;
+  box-shadow: 2px 2px 2px gray;
+  margin: 5px;
+}
+
+button:hover {
+  color: black;
+  transform: scale(1.05);
+}
+
+.edicion {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; 
+  }
+  
+  .content {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .content input, 
+  .content textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+
+  .aviso {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: bold;
+  }
+  

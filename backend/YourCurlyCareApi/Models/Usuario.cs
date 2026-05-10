@@ -43,4 +43,7 @@ public class Usuario
 
     [Column("codigo_verificacion")]
     public string? CodigoVerificacion { get; set; }
+
+    [Column("rol")]
+    public string  Rol { get; set; } = "Usuario";
 }

@@ -71,6 +71,9 @@ public class UsuariosController : ControllerBase            //clase heredada de 
     [HttpPost("login")]
     public async Task<ActionResult> Login(LoginRequest request)
     {
+        Console.WriteLine($"Conexión usada: {_config.GetConnectionString("DefaultConnection")}");
+
+
         //buscar al usuario por su email
         var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == request.Email);
         if (usuario == null) return BadRequest("Credenciales incorrectas. Parece que el email no es correcto.");
@@ -100,6 +103,7 @@ public class UsuariosController : ControllerBase            //clase heredada de 
         {
             token = tokenFinal,
             username = usuario.Username,
+            rol = usuario.Rol,
             userId = usuario.Id
         });
     }
@@ -248,5 +252,39 @@ public class UsuariosController : ControllerBase            //clase heredada de 
 
         mensaje.To.Add(emailDestino);
         smtpClient.Send(mensaje);
+    }
+
+    [HttpPut("{id}")]                                       //editar los usuarios en el panel admin
+    public async Task<IActionResult> ActualizarUsuario(int id, [FromBody] System.Text.Json.JsonElement datosRecibidos)
+    {
+        var usuarioExistente = await _context.Usuarios.FindAsync(id);
+        if (usuarioExistente == null) return NotFound();
+
+        //si el campo existe, guarda el contenido en la variable, creando una temporal con lo que ha escrito el usuario
+        if (datosRecibidos.TryGetProperty("nombre", out var nombre))
+            usuarioExistente.Nombre = nombre.GetString();
+
+        if (datosRecibidos.TryGetProperty("apellido", out var apellido))
+            usuarioExistente.Apellido = apellido.GetString();
+
+        if (datosRecibidos.TryGetProperty("username", out var username))
+            usuarioExistente.Username = username.GetString();
+
+        if (datosRecibidos.TryGetProperty("email", out var email))
+            usuarioExistente.Email = email.GetString();
+
+        await _context.SaveChangesAsync();
+        return NoContent();                                 //si todo va bien no devuelve nada
+    }
+
+    [HttpDelete("{id}")]                                    //eliminar cuenta usuario desde el panel de administrador
+    public async Task<IActionResult> EliminarUsuario(int id)
+    {
+        var usuario = await _context.Usuarios.FindAsync(id);
+        if (usuario == null) return NotFound();
+
+        _context.Usuarios.Remove(usuario); 
+        await _context.SaveChangesAsync();
+        return Ok();
     }
 }

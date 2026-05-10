@@ -1,4 +1,9 @@
 <div class="container">
+  @if (authService.userRol() === 'Admin') {
+  <section class="admin">
+    <app-productos></app-productos>
+  </section>
+  } @else { 
   <h2>Escáner de productos</h2>
 
   <div id="camara"></div>
@@ -21,25 +26,26 @@
     <div class="detalles">
       <ul>
         <li>
-          @if (alcoholesEncontrados.length > 0) { Contiene alcoholes secantes: <em>{{  alcoholesEncontrados.join(', ') }}</em> } @else { Sin alcoholes
-          malos. }
+          @if (alcoholesEncontrados.length > 0) { Contiene alcoholes secantes:
+          <em>{{ alcoholesEncontrados.join(', ') }}</em> } @else { Sin alcoholes malos. }
         </li>
 
         <li>
-          @if (siliconasEncontradas.length > 0) { Contiene siliconas no solubles: <em>{{  siliconasEncontradas.join(', ') }}</em>} @else { Sin
-          siliconas. }
+          @if (siliconasEncontradas.length > 0) { Contiene siliconas no solubles:
+          <em>{{ siliconasEncontradas.join(', ') }}</em
+          >} @else { Sin siliconas. }
         </li>
 
         <li>
-          @if (sulfatosEncontrados.length > 0) { Contiene sulfatos fuertes: <em>{{ sulfatosEncontrados.join(', ') }}</em> } @else { Sin sulfatos
-          agresivos. }
+          @if (sulfatosEncontrados.length > 0) { Contiene sulfatos fuertes:
+          <em>{{ sulfatosEncontrados.join(', ') }}</em> } @else { Sin sulfatos agresivos. }
         </li>
       </ul>
       @if(!productoEncontrado.alcohol && !productoEncontrado.silicona &&
       productoEncontrado.sulfato){
       <p>
-        <em>{{ productoEncontrado.nombre }}</em> no es apto para uso habitual, pero sí para el ultimo
-        lavado o reseteo mensual.
+        <em>{{ productoEncontrado.nombre }}</em> no es apto para uso habitual, pero sí para el
+        ultimo lavado o reseteo mensual.
       </p>
       } @if(!productoEncontrado.alcohol && !productoEncontrado.silicona &&
       !productoEncontrado.sulfato){
@@ -68,7 +74,7 @@
 
     <div class="campo">
       <label>Marca:</label>
-      <input type="text" [(ngModel)]="marcaNueva" placeholder="Herbal" required/>
+      <input type="text" [(ngModel)]="marcaNueva" placeholder="Herbal" required />
     </div>
 
     <div class="campo">
@@ -78,7 +84,8 @@
       <textarea
         [(ngModel)]="ingredientesExtraidos"
         rows="6"
-        placeholder="Los ingredientes son..." required
+        placeholder="Los ingredientes son..."
+        required
       ></textarea>
     </div>
 
@@ -86,6 +93,6 @@
       <button (click)="guardarNuevoProducto()">Guardar</button>
     </div>
   </div>
-  
-  }
+
+  } }
 </div>

@@ -1,0 +1,73 @@
+<div class="container">
+  @if (mensajeAviso) {
+  <div class="aviso">
+    {{ mensajeAviso }}
+  </div>
+  }
+
+  <h2>Productos registrados</h2>
+
+  <div class="tabla">
+    <table>
+      <tr>
+        <th>Codigo de barras</th>
+        <th>Nombre</th>
+        <th>Marca</th>
+        <th>Ingredientes</th>
+        <th>Silicona</th>
+        <th>Alcohol</th>
+        <th>Sulfatos</th>
+        <th>Apto</th>
+        <th>Fecha de registro</th>
+        <th>Acciones</th>
+      </tr>
+
+      @for (p of productos; track p.id) {
+      <tr>
+        <td>{{ p.codigoBarras }}</td>
+        <td>{{ p.nombre }}</td>
+        <td>{{ p.marca }}</td>
+        <td>{{ p.ingredientes }}</td>
+        <td>{{ p.silicona }}</td>
+        <td>{{ p.alcohol }}</td>
+        <td>{{ p.sulfato }}</td>
+        <td>{{ p.esApto }}</td>
+        <td>{{ p.fechaRegistro }}</td>
+        <td class="acciones">
+          <button (click)="abrirEdicion(p)">Editar</button>
+          <button (click)="eliminarProducto(p.id)">Eliminar</button>
+        </td>
+      </tr>
+      }
+    </table>
+  </div>
+
+  @if (productoEditando) {
+  <div class="edicion">
+    <div class="content">
+      <h3>Editando: {{ productoEditando.nombre }}</h3>
+
+      <label>Nombre:</label>
+      <input [(ngModel)]="productoEditando.nombre" type="text" />
+
+      <label>Marca:</label>
+      <input [(ngModel)]="productoEditando.marca" type="text" />
+
+      <label>Ingredientes:</label>
+      <textarea [(ngModel)]="productoEditando.ingredientes"></textarea>
+
+      <div>
+        <label><input type="checkbox" [(ngModel)]="productoEditando.silicona" /> Silicona</label>
+        <label><input type="checkbox" [(ngModel)]="productoEditando.alcohol" /> Alcohol</label>
+        <label><input type="checkbox" [(ngModel)]="productoEditando.sulfato" /> Sulfatos</label>
+        <label><input type="checkbox" [(ngModel)]="productoEditando.esApto" /> Apto</label>
+      </div>
+
+      <div>
+        <button (click)="guardarEdicion()">Guardar Cambios</button>
+        <button (click)="productoEditando = null">Cancelar</button>
+      </div>
+    </div>
+  </div>
+  }
+</div>

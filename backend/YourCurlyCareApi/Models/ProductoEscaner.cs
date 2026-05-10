@@ -43,4 +43,11 @@ public class ProductoEscaner
     [Required]
     [Column("es_apto")]
     public bool EsApto { get; set; }
+
+    [Required]
+    [Column("id_usuario")]
+    public int IdUsuario { get; set; }
+    [ForeignKey("IdUsuario")]
+    public virtual Usuario Usuario { get; set; } = null!;
+
 }

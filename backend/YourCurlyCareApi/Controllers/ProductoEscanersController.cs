@@ -46,7 +46,7 @@ public class ProductoEscanersController : ControllerBase
     {
         var producto = await _context.ProductoEscaners.FirstOrDefaultAsync(p => p.CodigoBarras == datos.CodigoBarras);
 
-        if (producto == null)                                                  
+        if (producto == null)
         {
             producto = new ProductoEscaner
             {
@@ -88,6 +88,71 @@ public class ProductoEscanersController : ControllerBase
             .Take(15).ToListAsync();
 
         return resultados;
+    }
+
+    //Panel de admin para productos --> Mezcla las tablas productoEscaner y registroEscaner de la BD
+    [HttpGet("admin")]
+    public async Task<ActionResult> GetProductosAdmin()
+    {
+        var lista = await _context.ProductoEscaners
+            .Join(_context.RegistroEscaners,
+                  p => p.Id,
+                  r => r.IdProductoE,
+                  (p, r) => new ProductosAdmin
+                  {
+                      Id = p.Id,
+                      CodigoBarras = p.CodigoBarras,
+                      Nombre = p.Nombre,
+                      Marca = p.Marca,
+                      Ingredientes = p.Ingredientes,
+                      Silicona = p.Silicona,
+                      Alcohol = p.Alcohol,
+                      Sulfato = p.Sulfato,
+                      EsApto = p.EsApto,
+                      IdUsuario = r.IdUsuario,
+                      FechaRegistro = r.FechaEscaner
+                  }).ToListAsync();
+
+        return Ok(lista);
+    }
+
+    [HttpPut("{id}")]                                                       //editar los productos en el panel admin
+    public async Task<IActionResult> ActualizarProducto(int id, [FromBody] System.Text.Json.JsonElement datosRecibidos)
+    {
+        var productoExistente = await _context.ProductoEscaners.FindAsync(id);
+        if (productoExistente == null) return NotFound();
+
+        if (datosRecibidos.TryGetProperty("nombre", out var nombre))
+            productoExistente.Nombre = nombre.GetString();
+
+        if (datosRecibidos.TryGetProperty("marca", out var marca))
+            productoExistente.Marca = marca.GetString();
+
+        if (datosRecibidos.TryGetProperty("ingredientes", out var ingredientes))
+            productoExistente.Ingredientes = ingredientes.GetString();
+
+        if (datosRecibidos.TryGetProperty("silicona", out var sil))
+            productoExistente.Silicona = sil.GetBoolean();
+
+        if (datosRecibidos.TryGetProperty("alcohol", out var alc))
+            productoExistente.Alcohol = alc.GetBoolean();
+
+        if (datosRecibidos.TryGetProperty("sulfato", out var sul))
+            productoExistente.Sulfato = sul.GetBoolean();
+
+        await _context.SaveChangesAsync();
+        return NoContent();                                 //si todo va bien no devuelve nada
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> EliminarProducto(int id)
+    {
+        var producto = await _context.ProductoEscaners.FindAsync(id);
+        if (producto == null) return NotFound();
+
+        _context.ProductoEscaners.Remove(producto); 
+        await _context.SaveChangesAsync();
+        return Ok();
     }
 }
 

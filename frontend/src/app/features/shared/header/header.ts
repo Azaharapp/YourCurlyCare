@@ -36,4 +36,9 @@ export class Header {
       this.resultados = [];
     }
   }
+
+  salir() {
+    this.authService.cerrarSesion();
+    this.mostrarOpcionesPerfil = false; 
+  }
 }
