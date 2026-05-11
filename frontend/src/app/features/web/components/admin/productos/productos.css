@@ -16,11 +16,16 @@ td {
 }
 
 table {
+  width: 100%;           
+  max-width: 1000px;
   border-collapse: collapse;
   text-align: center;
+  table-layout: auto;   
+  word-wrap: break-word;
 }
-th{
-    background-color: #d0b49f;
+
+th {
+  background-color: #d0b49f;
 }
 
 th,
@@ -50,46 +55,66 @@ button:hover {
 }
 
 .edicion {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.6);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999; 
-  }
-  
-  .content {
-    background: white;
-    padding: 2rem;
-    border-radius: 12px;
-    width: 90%;
-    max-width: 500px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
-  
-  .content input, 
-  .content textarea {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.content {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.content input,
+.content textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.aviso {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: bold;
+}
+
+/*---Responsive---*/
+@media (max-width: 900px) {
+  th,
+  td {
+    font-size: 12px; 
+    padding: 5px 2px; 
   }
 
-  .aviso {
-    background-color: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    text-align: center;
-    font-weight: bold;
+  .tabla {
+    margin: 5px 2px; 
   }
-  
+}
+
+@media (max-width: 600px) {
+  th,
+  td {
+    font-size: 10px; 
+  }
+
+}

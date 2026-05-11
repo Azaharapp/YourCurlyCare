@@ -89,6 +89,17 @@ label[for='recordar'] {
   cursor: pointer;
 }
 
+.credenciales {
+  background-color: #fee2e2; 
+  color: #b91c1c;           
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  border: 1px solid #fca5a5;
+  text-align: center;
+  font-size: 0.9em;
+}
+
 /*----Responsive----*/
 @media (max-width: 800px) {
   .container {

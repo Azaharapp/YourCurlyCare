@@ -62,9 +62,7 @@ export class AuthService {
   login(usuarioExistente: UsuarioLogin): Observable<any> {
     return this.http.post(`${this.apiUrl}/login`, usuarioExistente, {
       withCredentials: true
-    }).pipe(
-      tap((res: any) => this.guardarSesion(res, usuarioExistente.recordar))
-    );
+    });
   }
 
   recuperarPassword(email: string): Observable<any> {

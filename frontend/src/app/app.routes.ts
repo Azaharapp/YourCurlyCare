@@ -9,6 +9,8 @@ import { Escaner } from './features/web/components/escaner/escaner';
 import { Test } from './features/web/components/test/test';
 import { Validacion } from './features/web/components/auth/validacion/validacion';
 import { RecuperarPass } from './features/web/components/auth/recuperar-pass/recuperar-pass';
+import { Usuarios } from './features/web/components/admin/usuarios/usuarios';
+import { Productos } from './features/web/components/admin/productos/productos';
 
 export const routes: Routes = [
     { path: '', component: Web },
@@ -20,6 +22,8 @@ export const routes: Routes = [
     { path: 'test', component: Test },
     { path: 'validacion', component: Validacion },
     { path: 'recuperar', component: RecuperarPass },
+    { path: 'productos', component: Productos },
+    { path: 'usuarios', component: Usuarios },
     { path: '', redirectTo: 'inicio', pathMatch: 'full' },
     { path: '**', redirectTo: '' }
 ];

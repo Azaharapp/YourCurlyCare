@@ -18,6 +18,12 @@
         <label for="recordar">Recordar sesión</label>
       </div>
 
+      @if (mensajeError) { <!--Si las credenciales no son correctas salta un aviso-->
+        <div class="credenciales">
+          {{ mensajeError }}
+        </div>
+      }
+
       <button type="submit" [disabled]="loginForm.invalid">Iniciar sesión</button>
     </form>
 
