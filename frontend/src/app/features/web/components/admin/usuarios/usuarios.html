@@ -15,6 +15,7 @@
         <th>Username</th>
         <th>Email</th>
         <th>Fecha de registro</th>
+        <th>Cuenta activa</th>
         <th>Acciones</th>
       </tr>
 
@@ -26,6 +27,7 @@
           <td>{{ u.username }}</td>
           <td>{{ u.email }}</td>
           <td>{{ u.fechaRegistro }}</td>
+          <td>{{ u.cuentaActiva }}</td>
           <td class="acciones">
             <button (click)="abrirEdicion(u)">Editar</button>
             <button (click)="eliminarUsuario(u.id)">Eliminar</button>

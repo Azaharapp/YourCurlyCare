@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { UsuarioLogin, UsuarioRegistro } from '../models/usuariosi';
@@ -71,5 +71,32 @@ export class AuthService {
 
   resetearPassword(datos: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/reset-pass`, datos);
+  }
+
+  solicitarEliminacion(): Observable<any> {
+    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    return this.http.post(`${this.apiUrl}/solicitar-eliminacion`, {}, {
+      headers: headers,
+      withCredentials: true
+    });
+  }
+
+  confirmarEliminacion(codigo: string): Observable<any> {
+    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.post(`${this.apiUrl}/confirmar-eliminacion`, JSON.stringify(codigo), {
+      headers: headers,
+      withCredentials: true
+    });
   }
 }

@@ -50,7 +50,7 @@ export class Productos {
     };
 
     //const urlPut = `http://127.0.0.1:5216/api/ProductoEscaners/${this.productoEditando.id}`;
-     const urlPut = `http://localhost:8000/api/ProductoEscaners/${this.productoEditando.id}`;
+    const urlPut = `http://localhost:8000/api/ProductoEscaners/${this.productoEditando.id}`;
 
     this.productoEditando = null;                                           //cierra la ventana de edicion
 

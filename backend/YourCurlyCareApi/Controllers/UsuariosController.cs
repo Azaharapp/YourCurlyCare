@@ -10,6 +10,7 @@ using System.Text;
 using System.Net.Mail;
 using System.Net;
 using System.Text.Json;
+using Microsoft.AspNetCore.Authorization;
 
 namespace YourCurlyCareApi.Controllers;
 
@@ -50,14 +51,31 @@ public class UsuariosController : ControllerBase            //clase heredada de 
     public async Task<ActionResult<Usuario>> RegistrarUsuario(Usuario usuario)
     {
         //variable almacena booleano si el email existe o no 
-        var emailExiste = await _context.Usuarios.AnyAsync(u => u.Email == usuario.Email);
+        var emailExiste = await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == usuario.Email);
 
-        if (emailExiste) return BadRequest("Este email ya está registrado.");
+        if (emailExiste != null)
+        {
+            if (emailExiste.CuentaActiva) return BadRequest("Este email ya está registrado.");
 
+            //si usuario quiere volver a crearse una cuanta despues de eliminarla, seguimos manteniendo sus antiguos datos
+            emailExiste.Username = usuario.Username;            // por si quiere cambiar el nombre
+            emailExiste.Password = BCrypt.Net.BCrypt.HashPassword(usuario.Password);
+            emailExiste.FechaRegistro = DateTime.Now;           // actualizamos a la nueva fecha
+            emailExiste.EmailConfirmado = false;
+            emailExiste.CodigoVerificacion = new Random().Next(100000, 999999).ToString();
+
+            await _context.SaveChangesAsync();
+            EnviarEmailConfirmacion(emailExiste.Email, emailExiste.CodigoVerificacion);
+
+            return Ok(new { requiereConfirmacion = true, mensaje = "Verifica tu email." });
+        }
+
+        //registro de usuario normal - si haber eliminado la cuenta
         //encripta contraseña de usuario
         usuario.Password = BCrypt.Net.BCrypt.HashPassword(usuario.Password);
         usuario.FechaRegistro = DateTime.Now;
         usuario.EmailConfirmado = false;
+        usuario.CuentaActiva = true;
         usuario.CodigoVerificacion = new Random().Next(100000, 999999).ToString();
 
         _context.Usuarios.Add(usuario);
@@ -71,12 +89,9 @@ public class UsuariosController : ControllerBase            //clase heredada de 
     [HttpPost("login")]
     public async Task<ActionResult> Login(LoginRequest request)
     {
-        Console.WriteLine($"Conexión usada: {_config.GetConnectionString("DefaultConnection")}");
-
-
         //buscar al usuario por su email
         var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == request.Email);
-        if (usuario == null) return BadRequest("Credenciales incorrectas. Parece que el email no es correcto.");
+        if (usuario == null || !usuario.CuentaActiva) return BadRequest("La cuenta ha sido desactivada.");
 
         if (!usuario.EmailConfirmado) return BadRequest("Debes confirmar tu email antes de iniciar sesión.");
 
@@ -144,6 +159,7 @@ public class UsuariosController : ControllerBase            //clase heredada de 
             if (usuario == null) return BadRequest("El código es incorrecto.");
 
             usuario.EmailConfirmado = true;
+            usuario.CuentaActiva = true;
             usuario.CodigoVerificacion = null;
 
             _context.Entry(usuario).Property(u => u.EmailConfirmado).IsModified = true;
@@ -283,8 +299,80 @@ public class UsuariosController : ControllerBase            //clase heredada de 
         var usuario = await _context.Usuarios.FindAsync(id);
         if (usuario == null) return NotFound();
 
-        _context.Usuarios.Remove(usuario); 
+        _context.Usuarios.Remove(usuario);
         await _context.SaveChangesAsync();
         return Ok();
+    }
+
+    [Authorize]
+    [HttpPost("solicitar-eliminacion")]
+    public async Task<IActionResult> SolicitarEliminacion()
+    {
+        try
+        {
+            var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+            if (userIdClaim == null) return Unauthorized(new { mensaje = "No autorizado" });
+
+            int userId = int.Parse(userIdClaim.Value);
+
+            var usuario = await _context.Usuarios.FindAsync(userId);
+            if (usuario == null) return NotFound(new { mensaje = "Usuario no encontrado" });
+
+            usuario.CodigoVerificacion = new Random().Next(100000, 999999).ToString();
+            await _context.SaveChangesAsync();
+
+            EnviarEmailEliminacion(usuario.Email, usuario.CodigoVerificacion);
+
+            return Ok(new { mensaje = "Se ha enviado un código a tu email." });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { mensaje = "Error interno", detalle = ex.Message });
+        }
+    }
+
+    [HttpPost("confirmar-eliminacion")]
+    public async Task<IActionResult> ConfirmarEliminacion([FromBody] string codigo)
+    {
+        var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.CodigoVerificacion == codigo);
+        if (usuario == null) return BadRequest("Código incorrecto.");
+
+        usuario.CuentaActiva = false;
+        usuario.CodigoVerificacion = null;
+        await _context.SaveChangesAsync();
+
+        return Ok(new { mensaje = "Cuenta desactivada correctamente." });
+    }
+
+    private void EnviarEmailEliminacion(string emailDestino, string codigo)
+    {
+        var emailEmisor = _config["EmailSettings:User"];
+        var passwordEmisor = _config["EmailSettings:Pass"];
+
+        var smtpClient = new SmtpClient("smtp.gmail.com")
+        {
+            Port = 587,
+            Credentials = new NetworkCredential(emailEmisor, passwordEmisor),
+            EnableSsl = true,
+        };
+
+        var mensaje = new MailMessage
+        {
+            From = new MailAddress(emailEmisor, "YourCurlyCare"),
+            Subject = "Eliminación de tu cuenta en YourCurlyCare",
+            Body = $@"
+            <html>
+                <body>
+                    <h2>Eliminación de cuenta</h2>
+                    <p>Has solicitado la eliminacion de la tu cuenta en la plataforma YourCurlyCare. Introduce el siguiente código en el apartado de validación de la web:</p>
+                    <h1 style='color: #d8a481;'>{codigo}</h1>
+                    <p>Si no has sido túo no quieres eliminarla, ignora este mensaje.</p>
+                </body>
+            </html>",
+            IsBodyHtml = true,
+        };
+
+        mensaje.To.Add(emailDestino);
+        smtpClient.Send(mensaje);
     }
 }

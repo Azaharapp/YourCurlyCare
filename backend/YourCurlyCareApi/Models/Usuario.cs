@@ -45,5 +45,11 @@ public class Usuario
     public string? CodigoVerificacion { get; set; }
 
     [Column("rol")]
-    public string  Rol { get; set; } = "Usuario";
+    public string Rol { get; set; } = "Usuario";
+
+    [Column("cuenta_activa")]                           //para saber si se ha eliminado o no
+    public bool CuentaActiva { get; set; } = true; 
+
+    [Column("es_valida")]                               //para saber si ha validado la cuenta o no con el codigo de autenticacion
+    public bool EsValida { get; set; } = false; 
 }

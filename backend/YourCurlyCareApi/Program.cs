@@ -1,5 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using YourCurlyCareApi.Data;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +13,29 @@ var serverVersion = new MySqlServerVersion(new Version(8, 0, 30));
 
 builder.Services.AddDbContext<YourCurlyCareContext>(options =>
     options.UseMySql(connectionString, serverVersion));
+
+var jwtKey = builder.Configuration["Jwt:Key"];
+if (string.IsNullOrEmpty(jwtKey)) throw new Exception("¡Falta la clave JWT!");
+var key = Encoding.ASCII.GetBytes(jwtKey);
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.RequireHttpsMetadata = false;
+    options.SaveToken = true;
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(key),
+        ValidateIssuer = false, // Ponlo en true si configuraste Issuer en el login
+        ValidateAudience = false,
+        ClockSkew = TimeSpan.Zero
+    };
+});
 //--
 
 // Add services to the container.
@@ -51,6 +77,7 @@ app.UseCors("PermitirAngular");
 
 //app.UseHttpsRedirection();
 
+app.UseAuthentication(); 
 app.UseAuthorization();
 
 app.MapControllers();

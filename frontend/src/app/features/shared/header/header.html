@@ -64,6 +64,7 @@
         @if (authService.usuarioActual()) {
         <p>Hola, {{ authService.usuarioActual() }}</p>
         <a (click)="salir()">Cerrar sesión</a>
+        <a (click)="eliminarCuenta()">Eliminar cuenta</a>
         } @else {
         <a routerLink="/login" (click)="desplegarPerfil()">Iniciar sesión</a>
         <a routerLink="/registro" (click)="desplegarPerfil()">Registrarse</a>
