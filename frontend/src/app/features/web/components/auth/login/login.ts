@@ -33,11 +33,17 @@ export class Login {
           this.router.navigate(['/']);
         },
         error: (err) => {
-          this.mensajeError = typeof err.error === 'string'
-            ? err.error
-            : "Email o contraseña incorrectos";
+          const mError = typeof err.error === 'string' ? err.error : "Email o contraseña incorrectos";
+          this.mensajeError = mError;
+
+          if (mError.toLowerCase().includes("desactivada")) {
+            setTimeout(() => {
+              this.router.navigate(['/registro']);
+            }, 2000); 
+          }
 
           this.cd.detectChanges();
+          
           setTimeout(() => {
             this.mensajeError = null;
             this.cd.detectChanges();

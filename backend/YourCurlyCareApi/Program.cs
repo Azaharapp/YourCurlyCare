@@ -67,13 +67,13 @@ builder.Services.AddSession(options => {
 
 var app = builder.Build();
 
-app.UseSession();                               //habilita las sesiones
-
 app.UseSwagger();
 app.UseSwaggerUI();
 
 
 app.UseCors("PermitirAngular");
+
+app.UseSession();                               //habilita las sesiones
 
 //app.UseHttpsRedirection();
 

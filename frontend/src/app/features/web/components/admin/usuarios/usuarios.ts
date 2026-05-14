@@ -46,7 +46,7 @@ export class Usuarios {
     };
 
     //const urlPut = `http://127.0.0.1:5216/api/Usuarios/${idCopia}`;
-     const urlPut = `http://localhost:8000/api/Usuarios/${idCopia}`;
+    const urlPut = `http://localhost:8000/api/Usuarios/${idCopia}`;
 
     this.usuarioEditando = null;                                          //cierra la ventana de edicion
 

@@ -16,12 +16,18 @@ td {
 }
 
 table {
-  width: 100%;           
+  width: 100%;   
+  height: auto;     
   max-width: 1000px;
   border-collapse: collapse;
   text-align: center;
   table-layout: auto;   
   word-wrap: break-word;
+}
+
+td {
+  /*white-space: nowrap; */
+  height: 1px;
 }
 
 th {
@@ -30,7 +36,7 @@ th {
 
 th,
 td {
-  padding: 10px;
+  padding: 0px 10px;
 }
 
 .tabla {
@@ -47,6 +53,14 @@ button {
   border-radius: 8px;
   box-shadow: 2px 2px 2px gray;
   margin: 5px;
+}
+
+.acciones button{
+  width: 70px;
+}
+
+button .save{
+  width: 100px;
 }
 
 button:hover {
@@ -103,7 +117,6 @@ button:hover {
   th,
   td {
     font-size: 12px; 
-    padding: 5px 2px; 
   }
 
   .tabla {
